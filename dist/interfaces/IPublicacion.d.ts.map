@@ -1,1 +1,0 @@
-{"version":3,"file":"IPublicacion.d.ts","sourceRoot":"","sources":["../../src/interfaces/IPublicacion.ts"],"names":[],"mappings":"AACA,MAAM,WAAW,YAAY;IACzB,MAAM,EAAE,MAAM,CAAC;IACf,KAAK,EAAE,MAAM,CAAC;IACd,eAAe,EAAE,MAAM,CAAC;IACxB,QAAQ,EAAE,OAAO,CAAC;CACrB"}
