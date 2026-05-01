@@ -1,0 +1,1 @@
+{"version":3,"file":"BuscarOpciones.d.ts","sourceRoot":"","sources":["../../src/interfaces/BuscarOpciones.ts"],"names":[],"mappings":"AACA,MAAM,WAAW,cAAc;IAC3B,MAAM,CAAC,EAAE,MAAM,CAAC;IAChB,KAAK,CAAC,EAAE,MAAM,CAAC;IACf,eAAe,CAAC,EAAE,MAAM,CAAC;IACzB,QAAQ,CAAC,EAAE,OAAO,CAAC;CACtB"}
