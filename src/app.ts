@@ -25,3 +25,5 @@ const start = async () => {
     console.log("Server listening on localhost:3000")
 })
 };
+
+start();

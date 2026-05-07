@@ -22,7 +22,6 @@ export const cargarLibros = async () => {
         // esto hace que JSON -> objetos simples -> instancias de clase
         );
 
-
     }catch(error){ //manejo basico de errores
         console.error("Error cargando libros", error)
     }
@@ -45,13 +44,23 @@ export const obtenerLibros = () => {
 export const agregarLibro = async (data:any) => { //recibe datos desde la API
     const {titulo, autor, anioPublicacion, prestado} = data;
     //recibimos los datos del cliente y se extraen con destructuring en un JSON
-
+    
     const nuevoLibro = new Libro(titulo, autor, anioPublicacion, prestado);
     biblioteca.agregar(nuevoLibro); //lo agregamos a la colección
 
     await guardarLibros(); 
 
     return nuevoLibro;
+};
 
+//eliminar un libro
+export const eliminarLibro = (id: string): void => {
+    biblioteca.eliminar(id)
+    guardarLibros()
+};
 
+//actualizar libro 
+export const actualizarLibro = (id: string): void => {
+    biblioteca.actualizar(id)
+    guardarLibros()
 }

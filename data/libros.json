@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "prestado": false,
+    "id": "9619f2dc-239a-42a5-af41-c9cbb44da00f",
+    "titulo": "A clash of kings",
+    "autor": "G.R.R. Martin",
+    "anioPublicacion": 1998
+  },
+  {
+    "prestado": false,
+    "id": "ab311e71-a786-45f4-82b6-a5c26e35449a",
+    "titulo": "México ante Dios",
+    "autor": "Francisco Martin Moreno",
+    "anioPublicacion": 2007
+  },
+  {
+    "prestado": true,
+    "id": "9834dc01-7e23-43c1-98c7-0c9d4efdbe8f",
+    "titulo": "A storm of swords",
+    "autor": "G.R.R. Martin",
+    "anioPublicacion": 2000
+  }
+]

@@ -18,6 +18,10 @@ export class Biblioteca<T extends Libro | Comic>{
         console.log(`📚 Se agregó "${item.titulo}" a la biblioteca "${this.nombre}".`);
     }
 
+    eliminar(id: string): void{
+        this.coleccion = this.coleccion.filter((item) => item.id !== id); 
+    } //"nos regresa los que son diferentes al que queremos borrar, desigualdad estricta "
+
     // Lista todos los libros y cómics en la colección
     listar(): void {
         console.log(`\n📖 Catálogo de "${this.nombre}":`);
@@ -28,6 +32,14 @@ export class Biblioteca<T extends Libro | Comic>{
                 console.log("• " + item.mostrarInfo());
             });
         }
+    }
+
+    actualizar(id: string): void {
+        const libroEncontrado = this.coleccion.find((item) => item.id === id)
+        if (!libroEncontrado) return ;
+        libroEncontrado.prestado = !libroEncontrado.prestado
+        
+        
     }
 
     // Busca un libro por título
