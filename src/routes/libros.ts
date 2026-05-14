@@ -6,8 +6,8 @@ const app = Router()
 
 
 //obtener todos los libros, ruta /libros 
-app.get("/", (req,res) => { //Endpoint tipico de API
-    res.json(obtenerLibros()) 
+app.get("/", async(req,res) => { //Endpoint tipico de API
+    res.json(await obtenerLibros()) 
 })
 /*Recuerda que ya estamos agregando libros desde el app.use... aqui ya no es 
 necesario volverlo a poner en la ruta porque si no sería como pedir la ruta libros/libros */
