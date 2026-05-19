@@ -7,7 +7,11 @@ const app = Router()
 
 //obtener todos los libros, ruta /libros 
 app.get("/", async(req,res) => { //Endpoint tipico de API
+    try{
     res.json(await obtenerLibros()) 
+    } catch (error){
+       res.status(500).json({mensaje:"Error al obtener libros", error})  
+    }
 })
 /*Recuerda que ya estamos agregando libros desde el app.use... aqui ya no es 
 necesario volverlo a poner en la ruta porque si no sería como pedir la ruta libros/libros */
@@ -16,28 +20,51 @@ necesario volverlo a poner en la ruta porque si no sería como pedir la ruta lib
 
 //crear libro con POST, ruta /libros
 app.post("/", async (req, res) => {
-    
+    // Extraemos los datos del body para validarlos antes de pasarlos al servicio
+    const { titulo, autor, anioPublicacion, prestado } = req.body;
+
+    if ( // Validamos que cada campo exista y sea del tipo correcto
+        typeof titulo !== "string" ||
+        typeof autor !== "string" ||
+        typeof anioPublicacion !== "number" ||
+        typeof prestado !== "boolean"
+    ) {// Si alguno falla, respondemos 400 (Bad Request) y cortamos la ejecución
+        res.status(400).json({ mensaje: "Datos inválidos o incompletos" }); 
+        return; // evita que Express siga ejecutando código después de haber respondido
+    }
+
+    try{
     //creamos un nuevo objeto Libro
     const nuevoLibro = await agregarLibro(req.body);
     res.json({mensaje:"Libro agregado", libro: nuevoLibro}) //respuesta   
+    } catch (error){
+        res.status(500).json({mensaje:"Error al agregar libro", error}) //es importante devolver error 500
+    }//si no lo especificamos, devuelve por default 200 y eso es engañoso si se supone es un error
 
 }) 
 
 //Eliminar un libro con DELETE
-app.delete("/:id", (req, res) => {
+app.delete("/:id", async (req, res) => {
+    try{
     const { id } = req.params;
     console.log("ID recibido:", id);
-    eliminarLibro(id);
+    await eliminarLibro(id);
     res.status(200).json({mensaje : "Libro eliminado"})
-    
+    } catch (error){
+        res.status(500).json({mensaje: "No se pudo borrar el libro, ID no encontrado"})
+    }
 
 })
 
 //actualizar un libro con PUT
-app.put("/:id", (req, res) =>{
+app.put("/:id", async (req, res) =>{
+    try{
     const { id } = req.params; 
-    actualizarLibro(id)
+    await actualizarLibro(id)
     res.status(200).json({mensaje : "Status del libro actualizado"})
+    }catch (error){
+        res.status(500).json({mensaje: "No se pudo actualizar el status del libro"})
+    }
 })
 
 
