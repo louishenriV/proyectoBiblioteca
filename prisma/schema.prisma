@@ -22,3 +22,10 @@ model libro{
   anioPublicacion Int
   prestado        Boolean @default(false)
 }
+
+model usuario{
+  id       String @id @default(uuid())
+  nombre   String
+  email    String @unique
+  password String
+}
