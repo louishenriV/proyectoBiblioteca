@@ -1,9 +1,12 @@
 import "dotenv"
-import express from "express"; //Importa el framwork para levantar servidores
+import express from "express"; //Importa el framework para levantar servidores
 import librosRoutes from "./routes/libros.js"
+import authRoutes from "./routes/auth.js"
 
 const app = express(); //creamos la app donde va a estar nuestro server 
 app.use(express.json()) //se trabaja con formato JSON en varios metodos de "BIblioteca"
+
+app.use("/auth", authRoutes) //conectamos las rutas de auth, ahora para acceder a ellas es necesario usar localhost:3000/auth
 
 //aqui conectamos las rutas
 app.use("/libros", librosRoutes)
