@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import { registrarUsuario } from "../services/authService.js";
+import { registrarUsuario, loginUsuario} from "../services/authService.js";
 
 const app = Router(); 
 export default app;
@@ -16,9 +16,28 @@ app.post("/registro", async (req, res) => {
     }
     try{
     const hash = await bcrypt.hash(password, 10);
-    const nuevoUsuario = registrarUsuario({nombre, email, password: hash});
+    const nuevoUsuario = await registrarUsuario({nombre, email, password: hash});
     res.status(201).json({ mensaje: "Usuario registrado", usuario: nuevoUsuario });
     } catch (error) {
         res.status(500).json({ mensaje: "Error al registrar usuario", error });
     }
+})
+
+app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    if (typeof email !== "string" || typeof password !== "string") {
+        res.status(400).json({ mensaje: "Datos inválidos o incompletos" });
+        return;
+    }
+        try {
+            const token = await loginUsuario(email, password);
+            if (!token) {
+                res.status(401).json({ mensaje: "Credenciales incorrectas" });
+                return;
+            }
+            res.json({ mensaje: "Login exitoso", token });
+        } catch (error) {
+            res.status(500).json({ mensaje: "Error al iniciar sesión", error });
+        }
 })
