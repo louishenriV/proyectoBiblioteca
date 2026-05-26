@@ -1,6 +1,6 @@
 
 import "dotenv/config" 
-import prisma from "../prismaClient";
+import prisma from "../prismaClient.js";
 //importamos la instancia de Prisma Client para interactuar con la base de datos
 
 
