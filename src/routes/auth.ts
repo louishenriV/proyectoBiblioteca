@@ -14,12 +14,30 @@ app.post("/registro", async (req, res) => {
         res.status(400).json({ mensaje: "Datos inválidos o incompletos" });
         return;
     }
+
+    if (password.length < 8) {
+        res.status(400).json({ mensaje: "La contraseña debe tener al menos 8 caracteres" });
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar el formato del email
+    if (!emailRegex.test(email)) {
+        res.status(400).json({ mensaje: "Formato de email inválido" });
+        return;
+    }
+
+
     try{
     const hash = await bcrypt.hash(password, 10);
     const nuevoUsuario = await registrarUsuario({nombre, email, password: hash});
     res.status(201).json({ mensaje: "Usuario registrado", usuario: nuevoUsuario });
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al registrar usuario", error });
+    }     catch (error: any) {
+            console.log("Error en login:", error);
+            if (error.code === "P2002") {
+                res.status(409).json({ mensaje: "El email ya está registrado" });
+                return;
+            }
+            res.status(500).json({ mensaje: "Error al registrar usuario", error });
     }
 })
 
@@ -37,7 +55,8 @@ app.post("/login", async (req, res) => {
                 return;
             }
             res.json({ mensaje: "Login exitoso", token });
-        } catch (error) {
+        }
+        catch (error) {
             res.status(500).json({ mensaje: "Error al iniciar sesión", error });
         }
 })

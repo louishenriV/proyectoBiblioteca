@@ -16,7 +16,6 @@ export const registrarUsuario = async (data:any) => {
             email: true
         } 
     })
-    console.log("Usuario registrado:", nuevoUsuario);
     return nuevoUsuario;
 } 
 
@@ -33,11 +32,10 @@ export const loginUsuario = async (email:string, password:string) => {
         if (!match) return null;
 
         const token = jwt.sign({ id: usuarioEncontrado!.id, email: usuarioEncontrado!.email }, 
-        process.env.JWT_SECRET!, { expiresIn: "1h" });
+        process.env.JWT_SECRET!, { expiresIn: process.env.JWT_EXPIRES_IN || "1h" as any });
         return token;
         
 } catch (error) {
-
     throw error;
 }   
 }

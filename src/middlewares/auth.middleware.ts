@@ -6,7 +6,8 @@ import jwt from "jsonwebtoken";
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization; //Lee el header Authorization de la petición que es donde se suele enviar el token de autenticación
     if (!authHeader) {
-        return res.status(401).json({ mensaje: "Token no proporcionado" }); //Si no hay token, respondemos con un error 401 (no autorizado) y un mensaje indicando que el token no fue proporcionado
+        return res.status(401).json({ mensaje: "Token no proporcionado" }); //Si no hay token, respondemos con un error 401 (no autorizado) 
+        //y un mensaje indicando que el token no fue proporcionado
     }
 
     const token = authHeader.split(" ")[1]; // Extraemos el token del encabezado

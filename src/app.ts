@@ -1,4 +1,4 @@
-import "dotenv"
+import "dotenv/config"; //Importa la libreria para manejar variables de entorno
 import express from "express"; //Importa el framework para levantar servidores
 import librosRoutes from "./routes/libros.js"
 import authRoutes from "./routes/auth.js"
@@ -13,19 +13,15 @@ y ademas se necesita el token de autenticacion**/
 
 app.use("/auth", authRoutes) //conectamos las rutas de auth, ahora para acceder a ellas es necesario usar localhost:3000/auth
 
-//aqui conectamos las rutas
-app.use("/libros", librosRoutes)
-
 
 app.get("/", (req, res) => { //ruta con metodo get y va a escuchar por ese puerto localhost:3000
     res.send("API de Biblioteca funcionando") //si alguien entra, esto es lo que responde
 }
 );
 
-const start = () => {
-    app.listen(3000, () =>{
+const PORT = process.env.PORT || 3000; //definimos el puerto, si no esta definido en el .env, se usara el 3000
+    app.listen(PORT, () =>{
     console.log("Server listening on localhost:3000")
 })
-};
 
-start();
+PORT; 
