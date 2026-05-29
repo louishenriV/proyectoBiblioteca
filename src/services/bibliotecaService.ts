@@ -5,14 +5,17 @@ import prisma from "../prismaClient.js";
 
 
 //Obtener todos los libros
-export const obtenerLibros = async () => {
-    return await prisma.libro.findMany();
+export const obtenerLibros = async (usuarioId: string | undefined) => {
+    return await prisma.libro.findMany({
+        where: { usuarioId: usuarioId ?? null } // Si usuarioId es undefined, no se aplicará el filtro y se traerán todos los libros
+    });
   //conectarse a PostgreSQL, hacer la consulta, esperar la respuesta y traerla de vuelta
 };
 
 //agregar un libro
 export const agregarLibro = async (data:any) => { //recibe datos desde la API
-    const {titulo, autor, anioPublicacion, prestado} = data;
+     const {titulo, autor, anioPublicacion, prestado, usuarioId} = data;
+    //console.log("data recibida:", data);
     //recibimos los datos del cliente y se extraen con destructuring en un JSON
     
     const nuevoLibro = await prisma.libro.create({
@@ -20,7 +23,8 @@ export const agregarLibro = async (data:any) => { //recibe datos desde la API
             titulo,
             autor,
             anioPublicacion,
-            prestado: prestado ?? false
+            prestado: prestado ?? false,
+            usuarioId: usuarioId ?? undefined
         }
     })
 

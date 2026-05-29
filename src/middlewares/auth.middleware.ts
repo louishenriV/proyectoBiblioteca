@@ -18,7 +18,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload; //Verifica el token con jwt.verify() usando la clave secreta 
-        req.headers = decoded; // Agregamos la información del usuario al objeto de solicitud
+        req.usuario = decoded; // Agregamos la información del usuario al objeto de solicitud
         next(); // si es valida, continuamos con la siguiente función de middleware o ruta
     } catch (error) {
         return res.status(401).json({ mensaje: "Token inválido" }); //rechaza con 401 si no es valido

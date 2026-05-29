@@ -607,7 +607,8 @@ export const LibroScalarFieldEnum = {
   titulo: 'titulo',
   autor: 'autor',
   anioPublicacion: 'anioPublicacion',
-  prestado: 'prestado'
+  prestado: 'prestado',
+  usuarioId: 'usuarioId'
 } as const
 
 export type LibroScalarFieldEnum = (typeof LibroScalarFieldEnum)[keyof typeof LibroScalarFieldEnum]
@@ -637,6 +638,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
