@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { obtenerLibros, agregarLibro, eliminarLibro, actualizarLibro } from "../services/bibliotecaService.js";
+import { obtenerLibros, agregarLibro, eliminarLibro, actualizarLibro, obtenerLibrosPrestados, obtenerLibrosDisponibles } from "../services/bibliotecaService.js";
 
 const app = Router()
 
@@ -17,7 +17,26 @@ app.get("/", async(req,res) => { //Endpoint tipico de API
 /*Recuerda que ya estamos agregando libros desde el app.use... aqui ya no es 
 necesario volverlo a poner en la ruta porque si no sería como pedir la ruta libros/libros */
 
+//obtener libros prestados, ruta /libros/prestados
+app.get("/prestados", async (req, res) => {
+    try {
+    const usuarioId = req.usuario?.id; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
+        const prestados = await obtenerLibrosPrestados(usuarioId);
+        res.json(prestados);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener libros prestados", error });
+    }
+});
 
+app.get("/disponibles", async (req, res) => {
+    try {
+    const usuarioId = req.usuario?.id;
+    const disponibles = await obtenerLibrosDisponibles(usuarioId);
+    res.json(disponibles);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener libros disponibles", error });
+    }
+}); 
 
 //crear libro con POST, ruta /libros
 app.post("/", async (req, res) => {

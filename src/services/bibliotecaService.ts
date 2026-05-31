@@ -54,3 +54,23 @@ export const actualizarLibro = async (id: string) => {
         data: { prestado: libroEncontrado.prestado }
     })
 }
+
+export const obtenerLibrosPrestados = async (usuarioId: string | undefined) => {
+    const librosPrestados = await prisma.libro.findMany({
+        where: { 
+            usuarioId: usuarioId ?? null,
+            prestado: true // Solo traer libros que estén prestados
+        }
+    });
+    return librosPrestados;
+}
+
+export const obtenerLibrosDisponibles = async (usuarioId: string | undefined) => {
+    const librosDisponibles = await prisma.libro.findMany({
+        where: { 
+            usuarioId: usuarioId ?? null,
+            prestado: false // Solo traer libros que no estén prestados
+        }
+    });
+    return librosDisponibles;
+}
