@@ -14,7 +14,7 @@ export const obtenerLibros = async (usuarioId: string | undefined) => {
 
 //agregar un libro
 export const agregarLibro = async (data:any) => { //recibe datos desde la API
-     const {titulo, autor, anioPublicacion, prestado, usuarioId} = data;
+     const {titulo, autor, anioPublicacion, prestado, usuarioId, editorial, edicion, isbn} = data;
     //console.log("data recibida:", data);
     //recibimos los datos del cliente y se extraen con destructuring en un JSON
     
@@ -24,7 +24,10 @@ export const agregarLibro = async (data:any) => { //recibe datos desde la API
             autor,
             anioPublicacion,
             prestado: prestado ?? false,
-            usuarioId: usuarioId ?? undefined
+            usuarioId: usuarioId ?? undefined,
+            editorial: editorial ?? undefined,
+            edicion: edicion ?? undefined,
+            isbn: isbn ?? undefined
         }
     })
 

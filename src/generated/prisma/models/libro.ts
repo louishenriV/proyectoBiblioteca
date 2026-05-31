@@ -40,6 +40,9 @@ export type LibroMinAggregateOutputType = {
   anioPublicacion: number | null
   prestado: boolean | null
   usuarioId: string | null
+  editorial: string | null
+  edicion: string | null
+  isbn: string | null
 }
 
 export type LibroMaxAggregateOutputType = {
@@ -49,6 +52,9 @@ export type LibroMaxAggregateOutputType = {
   anioPublicacion: number | null
   prestado: boolean | null
   usuarioId: string | null
+  editorial: string | null
+  edicion: string | null
+  isbn: string | null
 }
 
 export type LibroCountAggregateOutputType = {
@@ -58,6 +64,9 @@ export type LibroCountAggregateOutputType = {
   anioPublicacion: number
   prestado: number
   usuarioId: number
+  editorial: number
+  edicion: number
+  isbn: number
   _all: number
 }
 
@@ -77,6 +86,9 @@ export type LibroMinAggregateInputType = {
   anioPublicacion?: true
   prestado?: true
   usuarioId?: true
+  editorial?: true
+  edicion?: true
+  isbn?: true
 }
 
 export type LibroMaxAggregateInputType = {
@@ -86,6 +98,9 @@ export type LibroMaxAggregateInputType = {
   anioPublicacion?: true
   prestado?: true
   usuarioId?: true
+  editorial?: true
+  edicion?: true
+  isbn?: true
 }
 
 export type LibroCountAggregateInputType = {
@@ -95,6 +110,9 @@ export type LibroCountAggregateInputType = {
   anioPublicacion?: true
   prestado?: true
   usuarioId?: true
+  editorial?: true
+  edicion?: true
+  isbn?: true
   _all?: true
 }
 
@@ -191,6 +209,9 @@ export type LibroGroupByOutputType = {
   anioPublicacion: number
   prestado: boolean
   usuarioId: string | null
+  editorial: string | null
+  edicion: string | null
+  isbn: string | null
   _count: LibroCountAggregateOutputType | null
   _avg: LibroAvgAggregateOutputType | null
   _sum: LibroSumAggregateOutputType | null
@@ -223,6 +244,9 @@ export type libroWhereInput = {
   anioPublicacion?: Prisma.IntFilter<"libro"> | number
   prestado?: Prisma.BoolFilter<"libro"> | boolean
   usuarioId?: Prisma.StringNullableFilter<"libro"> | string | null
+  editorial?: Prisma.StringNullableFilter<"libro"> | string | null
+  edicion?: Prisma.StringNullableFilter<"libro"> | string | null
+  isbn?: Prisma.StringNullableFilter<"libro"> | string | null
   usuario?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.usuarioWhereInput> | null
 }
 
@@ -233,11 +257,15 @@ export type libroOrderByWithRelationInput = {
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
   usuarioId?: Prisma.SortOrderInput | Prisma.SortOrder
+  editorial?: Prisma.SortOrderInput | Prisma.SortOrder
+  edicion?: Prisma.SortOrderInput | Prisma.SortOrder
+  isbn?: Prisma.SortOrderInput | Prisma.SortOrder
   usuario?: Prisma.usuarioOrderByWithRelationInput
 }
 
 export type libroWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  isbn?: string
   AND?: Prisma.libroWhereInput | Prisma.libroWhereInput[]
   OR?: Prisma.libroWhereInput[]
   NOT?: Prisma.libroWhereInput | Prisma.libroWhereInput[]
@@ -246,8 +274,10 @@ export type libroWhereUniqueInput = Prisma.AtLeast<{
   anioPublicacion?: Prisma.IntFilter<"libro"> | number
   prestado?: Prisma.BoolFilter<"libro"> | boolean
   usuarioId?: Prisma.StringNullableFilter<"libro"> | string | null
+  editorial?: Prisma.StringNullableFilter<"libro"> | string | null
+  edicion?: Prisma.StringNullableFilter<"libro"> | string | null
   usuario?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.usuarioWhereInput> | null
-}, "id">
+}, "id" | "isbn">
 
 export type libroOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -256,6 +286,9 @@ export type libroOrderByWithAggregationInput = {
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
   usuarioId?: Prisma.SortOrderInput | Prisma.SortOrder
+  editorial?: Prisma.SortOrderInput | Prisma.SortOrder
+  edicion?: Prisma.SortOrderInput | Prisma.SortOrder
+  isbn?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.libroCountOrderByAggregateInput
   _avg?: Prisma.libroAvgOrderByAggregateInput
   _max?: Prisma.libroMaxOrderByAggregateInput
@@ -273,6 +306,9 @@ export type libroScalarWhereWithAggregatesInput = {
   anioPublicacion?: Prisma.IntWithAggregatesFilter<"libro"> | number
   prestado?: Prisma.BoolWithAggregatesFilter<"libro"> | boolean
   usuarioId?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
+  editorial?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
+  edicion?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
+  isbn?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
 }
 
 export type libroCreateInput = {
@@ -281,6 +317,9 @@ export type libroCreateInput = {
   autor: string
   anioPublicacion: number
   prestado?: boolean
+  editorial?: string | null
+  edicion?: string | null
+  isbn?: string | null
   usuario?: Prisma.usuarioCreateNestedOneWithoutLibrosInput
 }
 
@@ -291,6 +330,9 @@ export type libroUncheckedCreateInput = {
   anioPublicacion: number
   prestado?: boolean
   usuarioId?: string | null
+  editorial?: string | null
+  edicion?: string | null
+  isbn?: string | null
 }
 
 export type libroUpdateInput = {
@@ -299,6 +341,9 @@ export type libroUpdateInput = {
   autor?: Prisma.StringFieldUpdateOperationsInput | string
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   usuario?: Prisma.usuarioUpdateOneWithoutLibrosNestedInput
 }
 
@@ -309,6 +354,9 @@ export type libroUncheckedUpdateInput = {
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   usuarioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type libroCreateManyInput = {
@@ -318,6 +366,9 @@ export type libroCreateManyInput = {
   anioPublicacion: number
   prestado?: boolean
   usuarioId?: string | null
+  editorial?: string | null
+  edicion?: string | null
+  isbn?: string | null
 }
 
 export type libroUpdateManyMutationInput = {
@@ -326,6 +377,9 @@ export type libroUpdateManyMutationInput = {
   autor?: Prisma.StringFieldUpdateOperationsInput | string
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type libroUncheckedUpdateManyInput = {
@@ -335,6 +389,9 @@ export type libroUncheckedUpdateManyInput = {
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
   usuarioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type libroCountOrderByAggregateInput = {
@@ -344,6 +401,9 @@ export type libroCountOrderByAggregateInput = {
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
   usuarioId?: Prisma.SortOrder
+  editorial?: Prisma.SortOrder
+  edicion?: Prisma.SortOrder
+  isbn?: Prisma.SortOrder
 }
 
 export type libroAvgOrderByAggregateInput = {
@@ -357,6 +417,9 @@ export type libroMaxOrderByAggregateInput = {
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
   usuarioId?: Prisma.SortOrder
+  editorial?: Prisma.SortOrder
+  edicion?: Prisma.SortOrder
+  isbn?: Prisma.SortOrder
 }
 
 export type libroMinOrderByAggregateInput = {
@@ -366,6 +429,9 @@ export type libroMinOrderByAggregateInput = {
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
   usuarioId?: Prisma.SortOrder
+  editorial?: Prisma.SortOrder
+  edicion?: Prisma.SortOrder
+  isbn?: Prisma.SortOrder
 }
 
 export type libroSumOrderByAggregateInput = {
@@ -450,6 +516,9 @@ export type libroCreateWithoutUsuarioInput = {
   autor: string
   anioPublicacion: number
   prestado?: boolean
+  editorial?: string | null
+  edicion?: string | null
+  isbn?: string | null
 }
 
 export type libroUncheckedCreateWithoutUsuarioInput = {
@@ -458,6 +527,9 @@ export type libroUncheckedCreateWithoutUsuarioInput = {
   autor: string
   anioPublicacion: number
   prestado?: boolean
+  editorial?: string | null
+  edicion?: string | null
+  isbn?: string | null
 }
 
 export type libroCreateOrConnectWithoutUsuarioInput = {
@@ -496,6 +568,9 @@ export type libroScalarWhereInput = {
   anioPublicacion?: Prisma.IntFilter<"libro"> | number
   prestado?: Prisma.BoolFilter<"libro"> | boolean
   usuarioId?: Prisma.StringNullableFilter<"libro"> | string | null
+  editorial?: Prisma.StringNullableFilter<"libro"> | string | null
+  edicion?: Prisma.StringNullableFilter<"libro"> | string | null
+  isbn?: Prisma.StringNullableFilter<"libro"> | string | null
 }
 
 export type libroCreateManyUsuarioInput = {
@@ -504,6 +579,9 @@ export type libroCreateManyUsuarioInput = {
   autor: string
   anioPublicacion: number
   prestado?: boolean
+  editorial?: string | null
+  edicion?: string | null
+  isbn?: string | null
 }
 
 export type libroUpdateWithoutUsuarioInput = {
@@ -512,6 +590,9 @@ export type libroUpdateWithoutUsuarioInput = {
   autor?: Prisma.StringFieldUpdateOperationsInput | string
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type libroUncheckedUpdateWithoutUsuarioInput = {
@@ -520,6 +601,9 @@ export type libroUncheckedUpdateWithoutUsuarioInput = {
   autor?: Prisma.StringFieldUpdateOperationsInput | string
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type libroUncheckedUpdateManyWithoutUsuarioInput = {
@@ -528,6 +612,9 @@ export type libroUncheckedUpdateManyWithoutUsuarioInput = {
   autor?: Prisma.StringFieldUpdateOperationsInput | string
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -539,6 +626,9 @@ export type libroSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   anioPublicacion?: boolean
   prestado?: boolean
   usuarioId?: boolean
+  editorial?: boolean
+  edicion?: boolean
+  isbn?: boolean
   usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
 }, ExtArgs["result"]["libro"]>
 
@@ -549,6 +639,9 @@ export type libroSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   anioPublicacion?: boolean
   prestado?: boolean
   usuarioId?: boolean
+  editorial?: boolean
+  edicion?: boolean
+  isbn?: boolean
   usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
 }, ExtArgs["result"]["libro"]>
 
@@ -559,6 +652,9 @@ export type libroSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   anioPublicacion?: boolean
   prestado?: boolean
   usuarioId?: boolean
+  editorial?: boolean
+  edicion?: boolean
+  isbn?: boolean
   usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
 }, ExtArgs["result"]["libro"]>
 
@@ -569,9 +665,12 @@ export type libroSelectScalar = {
   anioPublicacion?: boolean
   prestado?: boolean
   usuarioId?: boolean
+  editorial?: boolean
+  edicion?: boolean
+  isbn?: boolean
 }
 
-export type libroOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "titulo" | "autor" | "anioPublicacion" | "prestado" | "usuarioId", ExtArgs["result"]["libro"]>
+export type libroOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "titulo" | "autor" | "anioPublicacion" | "prestado" | "usuarioId" | "editorial" | "edicion" | "isbn", ExtArgs["result"]["libro"]>
 export type libroInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
 }
@@ -594,6 +693,9 @@ export type $libroPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     anioPublicacion: number
     prestado: boolean
     usuarioId: string | null
+    editorial: string | null
+    edicion: string | null
+    isbn: string | null
   }, ExtArgs["result"]["libro"]>
   composites: {}
 }
@@ -1024,6 +1126,9 @@ export interface libroFieldRefs {
   readonly anioPublicacion: Prisma.FieldRef<"libro", 'Int'>
   readonly prestado: Prisma.FieldRef<"libro", 'Boolean'>
   readonly usuarioId: Prisma.FieldRef<"libro", 'String'>
+  readonly editorial: Prisma.FieldRef<"libro", 'String'>
+  readonly edicion: Prisma.FieldRef<"libro", 'String'>
+  readonly isbn: Prisma.FieldRef<"libro", 'String'>
 }
     
 

@@ -22,22 +22,24 @@ necesario volverlo a poner en la ruta porque si no sería como pedir la ruta lib
 //crear libro con POST, ruta /libros
 app.post("/", async (req, res) => {
     // Extraemos los datos del body para validarlos antes de pasarlos al servicio
-    const { titulo, autor, anioPublicacion, prestado } = req.body;
+    const { titulo, autor, anioPublicacion, prestado, editorial, edicion, isbn } = req.body;
     const { id: usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
 
     if ( // Validamos que cada campo exista y sea del tipo correcto
         typeof titulo !== "string" ||
         typeof autor !== "string" ||
         typeof anioPublicacion !== "number" ||
-        typeof prestado !== "boolean"
+        typeof prestado !== "boolean" ||
+        typeof editorial !== "string" ||
+        typeof edicion !== "string" ||
+        typeof isbn !== "string"
     ) {// Si alguno falla, respondemos 400 (Bad Request) y cortamos la ejecución
         res.status(400).json({ mensaje: "Datos inválidos o incompletos" }); 
         return; // evita que Express siga ejecutando código después de haber respondido
     }
-    console.log("usuarioId en la ruta:", usuarioId);
     try{
     //creamos un nuevo objeto Libro
-    const nuevoLibro = await agregarLibro({titulo, autor, anioPublicacion, prestado, usuarioId}) //pasamos el id del usuario al servicio para asociar el libro con el usuario que lo creó   ;
+    const nuevoLibro = await agregarLibro({titulo, autor, anioPublicacion, prestado, usuarioId, editorial, edicion, isbn}) //pasamos el id del usuario al servicio para asociar el libro con el usuario que lo creó   ;
     res.json({mensaje:"Libro agregado", libro: nuevoLibro}) //respuesta   
     } catch (error){
         res.status(500).json({mensaje:"Error al agregar libro", error}) //es importante devolver error 500
@@ -49,7 +51,7 @@ app.post("/", async (req, res) => {
 app.delete("/:id", async (req, res) => {
     try{
     const { id } = req.params;
-    console.log("ID recibido:", id);
+    // console.log("ID recibido:", id);
     await eliminarLibro(id);
     res.status(200).json({mensaje : "Libro eliminado"})
     } catch (error){

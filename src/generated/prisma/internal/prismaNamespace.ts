@@ -608,7 +608,10 @@ export const LibroScalarFieldEnum = {
   autor: 'autor',
   anioPublicacion: 'anioPublicacion',
   prestado: 'prestado',
-  usuarioId: 'usuarioId'
+  usuarioId: 'usuarioId',
+  editorial: 'editorial',
+  edicion: 'edicion',
+  isbn: 'isbn'
 } as const
 
 export type LibroScalarFieldEnum = (typeof LibroScalarFieldEnum)[keyof typeof LibroScalarFieldEnum]

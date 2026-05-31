@@ -21,8 +21,12 @@ model libro{
   autor           String
   anioPublicacion Int
   prestado        Boolean @default(false)
-  usuarioId      String?// Relación opcional con el usuario que tiene el libro prestado 
+  usuarioId       String?// Relación opcional con el usuario que tiene el libro prestado 
   usuario         usuario? @relation(fields: [usuarioId], references: [id])
+  editorial       String?
+  edicion         String?
+  isbn            String? @unique
+
 }
 
 model usuario{
