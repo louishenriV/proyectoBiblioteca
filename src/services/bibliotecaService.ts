@@ -11,7 +11,6 @@ export const obtenerLibros = async () => {
 //agregar un libro
 export const agregarLibro = async (data:any) => { //recibe datos desde la API
      const {titulo, autor, anioPublicacion, editorial, edicion, isbn} = data;
-    //console.log("data recibida:", data);
     //recibimos los datos del cliente y se extraen con destructuring en un JSON
     
     const nuevoLibro = await prisma.libro.create({

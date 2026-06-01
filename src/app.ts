@@ -2,6 +2,7 @@ import "dotenv/config"; //Importa la libreria para manejar variables de entorno
 import express from "express"; //Importa el framework para levantar servidores
 import librosRoutes from "./routes/libros.js"
 import authRoutes from "./routes/auth.js"
+import prestamosRoutes from "./routes/prestamos.js"
 import { authMiddleware } from "./middlewares/auth.middleware.js";
 
 
@@ -12,6 +13,7 @@ a ellas es necesario usar localhost:3000/libros
 y ademas se necesita el token de autenticacion**/
 
 app.use("/auth", authRoutes) //conectamos las rutas de auth, ahora para acceder a ellas es necesario usar localhost:3000/auth
+app.use("/prestamos", authMiddleware, prestamosRoutes) //conectamos las rutas de prestamos, ahora para acceder a ellas es necesario usar localhost:3000/prestamos y ademas se necesita el token de autenticacion
 
 
 app.get("/", (req, res) => { //ruta con metodo get y va a escuchar por ese puerto localhost:3000
