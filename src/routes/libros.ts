@@ -1,15 +1,13 @@
 import { Router } from "express"
-import { obtenerLibros, agregarLibro, eliminarLibro, actualizarLibro, obtenerLibrosPrestados, obtenerLibrosDisponibles } from "../services/bibliotecaService.js";
+import { obtenerLibros, agregarLibro, eliminarLibro } from "../services/bibliotecaService.js";
 
 const app = Router()
 
 
-
 //obtener todos los libros, ruta /libros 
 app.get("/", async(req,res) => { //Endpoint tipico de API
-    const usuarioId = req.usuario?.id; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
     try{
-    res.json(await obtenerLibros(usuarioId)) //pasamos el id del usuario al servicio para que solo traiga los libros asociados a ese usuario
+    res.json(await obtenerLibros())
     } catch (error){
        res.status(500).json({mensaje:"Error al obtener libros", error})  
     }
@@ -17,48 +15,23 @@ app.get("/", async(req,res) => { //Endpoint tipico de API
 /*Recuerda que ya estamos agregando libros desde el app.use... aqui ya no es 
 necesario volverlo a poner en la ruta porque si no sería como pedir la ruta libros/libros */
 
-//obtener libros prestados, ruta /libros/prestados
-app.get("/prestados", async (req, res) => {
-    try {
-    const usuarioId = req.usuario?.id; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
-        const prestados = await obtenerLibrosPrestados(usuarioId);
-        res.json(prestados);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al obtener libros prestados", error });
-    }
-});
-
-app.get("/disponibles", async (req, res) => {
-    try {
-    const usuarioId = req.usuario?.id;
-    const disponibles = await obtenerLibrosDisponibles(usuarioId);
-    res.json(disponibles);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al obtener libros disponibles", error });
-    }
-}); 
 
 //crear libro con POST, ruta /libros
 app.post("/", async (req, res) => {
     // Extraemos los datos del body para validarlos antes de pasarlos al servicio
-    const { titulo, autor, anioPublicacion, prestado, editorial, edicion, isbn } = req.body;
-    const { id: usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
+    const { titulo, autor, anioPublicacion, editorial, edicion, isbn } = req.body;
 
     if ( // Validamos que cada campo exista y sea del tipo correcto
         typeof titulo !== "string" ||
         typeof autor !== "string" ||
-        typeof anioPublicacion !== "number" ||
-        typeof prestado !== "boolean" ||
-        typeof editorial !== "string" ||
-        typeof edicion !== "string" ||
-        typeof isbn !== "string"
+        typeof anioPublicacion !== "number"
     ) {// Si alguno falla, respondemos 400 (Bad Request) y cortamos la ejecución
         res.status(400).json({ mensaje: "Datos inválidos o incompletos" }); 
         return; // evita que Express siga ejecutando código después de haber respondido
     }
     try{
     //creamos un nuevo objeto Libro
-    const nuevoLibro = await agregarLibro({titulo, autor, anioPublicacion, prestado, usuarioId, editorial, edicion, isbn}) //pasamos el id del usuario al servicio para asociar el libro con el usuario que lo creó   ;
+    const nuevoLibro = await agregarLibro({titulo, autor, anioPublicacion, editorial, edicion, isbn}) //pasamos el id del usuario al servicio para asociar el libro con el usuario que lo creó   ;
     res.json({mensaje:"Libro agregado", libro: nuevoLibro}) //respuesta   
     } catch (error){
         res.status(500).json({mensaje:"Error al agregar libro", error}) //es importante devolver error 500
@@ -70,25 +43,17 @@ app.post("/", async (req, res) => {
 app.delete("/:id", async (req, res) => {
     try{
     const { id } = req.params;
-    // console.log("ID recibido:", id);
-    await eliminarLibro(id);
+    await eliminarLibro(id) //pasamos el id del usuario al servicio para que solo pueda eliminar libros asociados a ese usuario;
     res.status(200).json({mensaje : "Libro eliminado"})
-    } catch (error){
+    } catch (error: any){
+        if (error.code === "P2025") {
+        res.status(404).json({ mensaje: "Libro no encontrado o no pertenece al usuario" });
+        return;
+    }
         res.status(500).json({mensaje: "No se pudo borrar el libro, ID no encontrado"})
     }
-
 })
 
-//actualizar un libro con PUT
-app.put("/:id", async (req, res) =>{
-    try{
-    const { id } = req.params; 
-    await actualizarLibro(id)
-    res.status(200).json({mensaje : "Status del libro actualizado"})
-    }catch (error){
-        res.status(500).json({mensaje: "No se pudo actualizar el status del libro"})
-    }
-})
 
 
 export default app;

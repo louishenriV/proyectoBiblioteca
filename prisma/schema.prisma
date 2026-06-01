@@ -21,11 +21,10 @@ model libro{
   autor           String
   anioPublicacion Int
   prestado        Boolean @default(false)
-  usuarioId       String?// Relación opcional con el usuario que tiene el libro prestado 
-  usuario         usuario? @relation(fields: [usuarioId], references: [id])
   editorial       String?
   edicion         String?
   isbn            String? @unique
+  prestamos        prestamo[] // Relación con los préstamos de este libro
 
 }
 
@@ -34,5 +33,15 @@ model usuario{
   nombre   String
   email    String @unique
   password String
-  libros   libro[] // Relación con los libros prestados por el usuario
+  prestamos prestamo[] 
+}
+
+model prestamo{
+  id         String   @id @default(uuid())
+  fechaPrestamo DateTime
+  fechaDevolucion DateTime?
+  libroId     String
+  usuarioId   String
+  libro       libro    @relation(fields: [libroId], references: [id])
+  usuario     usuario  @relation(fields: [usuarioId], references: [id])
 }

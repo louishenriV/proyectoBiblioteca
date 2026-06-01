@@ -1,20 +1,16 @@
-
-import "dotenv/config" 
 import prisma from "../prismaClient.js";
 //importamos la instancia de Prisma Client para interactuar con la base de datos
 
 
 //Obtener todos los libros
-export const obtenerLibros = async (usuarioId: string | undefined) => {
-    return await prisma.libro.findMany({
-        where: { usuarioId: usuarioId ?? null } // Si usuarioId es undefined, no se aplicará el filtro y se traerán todos los libros
-    });
+export const obtenerLibros = async () => {
+    return await prisma.libro.findMany() 
   //conectarse a PostgreSQL, hacer la consulta, esperar la respuesta y traerla de vuelta
 };
 
 //agregar un libro
 export const agregarLibro = async (data:any) => { //recibe datos desde la API
-     const {titulo, autor, anioPublicacion, prestado, usuarioId, editorial, edicion, isbn} = data;
+     const {titulo, autor, anioPublicacion, editorial, edicion, isbn} = data;
     //console.log("data recibida:", data);
     //recibimos los datos del cliente y se extraen con destructuring en un JSON
     
@@ -23,8 +19,6 @@ export const agregarLibro = async (data:any) => { //recibe datos desde la API
             titulo,
             autor,
             anioPublicacion,
-            prestado: prestado ?? false,
-            usuarioId: usuarioId ?? undefined,
             editorial: editorial ?? undefined,
             edicion: edicion ?? undefined,
             isbn: isbn ?? undefined
@@ -40,37 +34,3 @@ export const eliminarLibro = async (id:string) => {
         where: { id }
     })
 };
-
-//actualizar libro 
-export const actualizarLibro = async (id: string) => {
-    const libroEncontrado = await prisma.libro.findUnique({
-        where: { id }
-    })
-    if (!libroEncontrado) return;
-    libroEncontrado.prestado = !libroEncontrado.prestado
-    
-    await prisma.libro.update({
-        where : { id }, 
-        data: { prestado: libroEncontrado.prestado }
-    })
-}
-
-export const obtenerLibrosPrestados = async (usuarioId: string | undefined) => {
-    const librosPrestados = await prisma.libro.findMany({
-        where: { 
-            usuarioId: usuarioId ?? null,
-            prestado: true // Solo traer libros que estén prestados
-        }
-    });
-    return librosPrestados;
-}
-
-export const obtenerLibrosDisponibles = async (usuarioId: string | undefined) => {
-    const librosDisponibles = await prisma.libro.findMany({
-        where: { 
-            usuarioId: usuarioId ?? null,
-            prestado: false // Solo traer libros que no estén prestados
-        }
-    });
-    return librosDisponibles;
-}

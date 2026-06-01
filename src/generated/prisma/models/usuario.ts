@@ -173,7 +173,7 @@ export type usuarioWhereInput = {
   nombre?: Prisma.StringFilter<"usuario"> | string
   email?: Prisma.StringFilter<"usuario"> | string
   password?: Prisma.StringFilter<"usuario"> | string
-  libros?: Prisma.LibroListRelationFilter
+  prestamos?: Prisma.PrestamoListRelationFilter
 }
 
 export type usuarioOrderByWithRelationInput = {
@@ -181,7 +181,7 @@ export type usuarioOrderByWithRelationInput = {
   nombre?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
-  libros?: Prisma.libroOrderByRelationAggregateInput
+  prestamos?: Prisma.prestamoOrderByRelationAggregateInput
 }
 
 export type usuarioWhereUniqueInput = Prisma.AtLeast<{
@@ -192,7 +192,7 @@ export type usuarioWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.usuarioWhereInput | Prisma.usuarioWhereInput[]
   nombre?: Prisma.StringFilter<"usuario"> | string
   password?: Prisma.StringFilter<"usuario"> | string
-  libros?: Prisma.LibroListRelationFilter
+  prestamos?: Prisma.PrestamoListRelationFilter
 }, "id" | "email">
 
 export type usuarioOrderByWithAggregationInput = {
@@ -220,7 +220,7 @@ export type usuarioCreateInput = {
   nombre: string
   email: string
   password: string
-  libros?: Prisma.libroCreateNestedManyWithoutUsuarioInput
+  prestamos?: Prisma.prestamoCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateInput = {
@@ -228,7 +228,7 @@ export type usuarioUncheckedCreateInput = {
   nombre: string
   email: string
   password: string
-  libros?: Prisma.libroUncheckedCreateNestedManyWithoutUsuarioInput
+  prestamos?: Prisma.prestamoUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUpdateInput = {
@@ -236,7 +236,7 @@ export type usuarioUpdateInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  libros?: Prisma.libroUpdateManyWithoutUsuarioNestedInput
+  prestamos?: Prisma.prestamoUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateInput = {
@@ -244,7 +244,7 @@ export type usuarioUncheckedUpdateInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  libros?: Prisma.libroUncheckedUpdateManyWithoutUsuarioNestedInput
+  prestamos?: Prisma.prestamoUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateManyInput = {
@@ -268,11 +268,6 @@ export type usuarioUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type UsuarioNullableScalarRelationFilter = {
-  is?: Prisma.usuarioWhereInput | null
-  isNot?: Prisma.usuarioWhereInput | null
-}
-
 export type usuarioCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nombre?: Prisma.SortOrder
@@ -294,60 +289,63 @@ export type usuarioMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
 }
 
-export type usuarioCreateNestedOneWithoutLibrosInput = {
-  create?: Prisma.XOR<Prisma.usuarioCreateWithoutLibrosInput, Prisma.usuarioUncheckedCreateWithoutLibrosInput>
-  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutLibrosInput
+export type UsuarioScalarRelationFilter = {
+  is?: Prisma.usuarioWhereInput
+  isNot?: Prisma.usuarioWhereInput
+}
+
+export type usuarioCreateNestedOneWithoutPrestamosInput = {
+  create?: Prisma.XOR<Prisma.usuarioCreateWithoutPrestamosInput, Prisma.usuarioUncheckedCreateWithoutPrestamosInput>
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutPrestamosInput
   connect?: Prisma.usuarioWhereUniqueInput
 }
 
-export type usuarioUpdateOneWithoutLibrosNestedInput = {
-  create?: Prisma.XOR<Prisma.usuarioCreateWithoutLibrosInput, Prisma.usuarioUncheckedCreateWithoutLibrosInput>
-  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutLibrosInput
-  upsert?: Prisma.usuarioUpsertWithoutLibrosInput
-  disconnect?: Prisma.usuarioWhereInput | boolean
-  delete?: Prisma.usuarioWhereInput | boolean
+export type usuarioUpdateOneRequiredWithoutPrestamosNestedInput = {
+  create?: Prisma.XOR<Prisma.usuarioCreateWithoutPrestamosInput, Prisma.usuarioUncheckedCreateWithoutPrestamosInput>
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutPrestamosInput
+  upsert?: Prisma.usuarioUpsertWithoutPrestamosInput
   connect?: Prisma.usuarioWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.usuarioUpdateToOneWithWhereWithoutLibrosInput, Prisma.usuarioUpdateWithoutLibrosInput>, Prisma.usuarioUncheckedUpdateWithoutLibrosInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usuarioUpdateToOneWithWhereWithoutPrestamosInput, Prisma.usuarioUpdateWithoutPrestamosInput>, Prisma.usuarioUncheckedUpdateWithoutPrestamosInput>
 }
 
-export type usuarioCreateWithoutLibrosInput = {
+export type usuarioCreateWithoutPrestamosInput = {
   id?: string
   nombre: string
   email: string
   password: string
 }
 
-export type usuarioUncheckedCreateWithoutLibrosInput = {
+export type usuarioUncheckedCreateWithoutPrestamosInput = {
   id?: string
   nombre: string
   email: string
   password: string
 }
 
-export type usuarioCreateOrConnectWithoutLibrosInput = {
+export type usuarioCreateOrConnectWithoutPrestamosInput = {
   where: Prisma.usuarioWhereUniqueInput
-  create: Prisma.XOR<Prisma.usuarioCreateWithoutLibrosInput, Prisma.usuarioUncheckedCreateWithoutLibrosInput>
+  create: Prisma.XOR<Prisma.usuarioCreateWithoutPrestamosInput, Prisma.usuarioUncheckedCreateWithoutPrestamosInput>
 }
 
-export type usuarioUpsertWithoutLibrosInput = {
-  update: Prisma.XOR<Prisma.usuarioUpdateWithoutLibrosInput, Prisma.usuarioUncheckedUpdateWithoutLibrosInput>
-  create: Prisma.XOR<Prisma.usuarioCreateWithoutLibrosInput, Prisma.usuarioUncheckedCreateWithoutLibrosInput>
+export type usuarioUpsertWithoutPrestamosInput = {
+  update: Prisma.XOR<Prisma.usuarioUpdateWithoutPrestamosInput, Prisma.usuarioUncheckedUpdateWithoutPrestamosInput>
+  create: Prisma.XOR<Prisma.usuarioCreateWithoutPrestamosInput, Prisma.usuarioUncheckedCreateWithoutPrestamosInput>
   where?: Prisma.usuarioWhereInput
 }
 
-export type usuarioUpdateToOneWithWhereWithoutLibrosInput = {
+export type usuarioUpdateToOneWithWhereWithoutPrestamosInput = {
   where?: Prisma.usuarioWhereInput
-  data: Prisma.XOR<Prisma.usuarioUpdateWithoutLibrosInput, Prisma.usuarioUncheckedUpdateWithoutLibrosInput>
+  data: Prisma.XOR<Prisma.usuarioUpdateWithoutPrestamosInput, Prisma.usuarioUncheckedUpdateWithoutPrestamosInput>
 }
 
-export type usuarioUpdateWithoutLibrosInput = {
+export type usuarioUpdateWithoutPrestamosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type usuarioUncheckedUpdateWithoutLibrosInput = {
+export type usuarioUncheckedUpdateWithoutPrestamosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -360,11 +358,11 @@ export type usuarioUncheckedUpdateWithoutLibrosInput = {
  */
 
 export type UsuarioCountOutputType = {
-  libros: number
+  prestamos: number
 }
 
 export type UsuarioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  libros?: boolean | UsuarioCountOutputTypeCountLibrosArgs
+  prestamos?: boolean | UsuarioCountOutputTypeCountPrestamosArgs
 }
 
 /**
@@ -380,8 +378,8 @@ export type UsuarioCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * UsuarioCountOutputType without action
  */
-export type UsuarioCountOutputTypeCountLibrosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.libroWhereInput
+export type UsuarioCountOutputTypeCountPrestamosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.prestamoWhereInput
 }
 
 
@@ -390,7 +388,7 @@ export type usuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   nombre?: boolean
   email?: boolean
   password?: boolean
-  libros?: boolean | Prisma.usuario$librosArgs<ExtArgs>
+  prestamos?: boolean | Prisma.usuario$prestamosArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usuario"]>
 
@@ -417,7 +415,7 @@ export type usuarioSelectScalar = {
 
 export type usuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "email" | "password", ExtArgs["result"]["usuario"]>
 export type usuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  libros?: boolean | Prisma.usuario$librosArgs<ExtArgs>
+  prestamos?: boolean | Prisma.usuario$prestamosArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type usuarioIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -426,7 +424,7 @@ export type usuarioIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $usuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "usuario"
   objects: {
-    libros: Prisma.$libroPayload<ExtArgs>[]
+    prestamos: Prisma.$prestamoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -827,7 +825,7 @@ readonly fields: usuarioFieldRefs;
  */
 export interface Prisma__usuarioClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  libros<T extends Prisma.usuario$librosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuario$librosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$libroPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  prestamos<T extends Prisma.usuario$prestamosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuario$prestamosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$prestamoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1249,27 +1247,27 @@ export type usuarioDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * usuario.libros
+ * usuario.prestamos
  */
-export type usuario$librosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type usuario$prestamosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the libro
+   * Select specific fields to fetch from the prestamo
    */
-  select?: Prisma.libroSelect<ExtArgs> | null
+  select?: Prisma.prestamoSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the libro
+   * Omit specific fields from the prestamo
    */
-  omit?: Prisma.libroOmit<ExtArgs> | null
+  omit?: Prisma.prestamoOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.libroInclude<ExtArgs> | null
-  where?: Prisma.libroWhereInput
-  orderBy?: Prisma.libroOrderByWithRelationInput | Prisma.libroOrderByWithRelationInput[]
-  cursor?: Prisma.libroWhereUniqueInput
+  include?: Prisma.prestamoInclude<ExtArgs> | null
+  where?: Prisma.prestamoWhereInput
+  orderBy?: Prisma.prestamoOrderByWithRelationInput | Prisma.prestamoOrderByWithRelationInput[]
+  cursor?: Prisma.prestamoWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.LibroScalarFieldEnum | Prisma.LibroScalarFieldEnum[]
+  distinct?: Prisma.PrestamoScalarFieldEnum | Prisma.PrestamoScalarFieldEnum[]
 }
 
 /**

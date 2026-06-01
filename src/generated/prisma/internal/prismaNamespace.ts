@@ -395,7 +395,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   libro: 'libro',
-  usuario: 'usuario'
+  usuario: 'usuario',
+  prestamo: 'prestamo'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -411,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "libro" | "usuario"
+    modelProps: "libro" | "usuario" | "prestamo"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -563,6 +564,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    prestamo: {
+      payload: Prisma.$prestamoPayload<ExtArgs>
+      fields: Prisma.prestamoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.prestamoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.prestamoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>
+        }
+        findFirst: {
+          args: Prisma.prestamoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.prestamoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>
+        }
+        findMany: {
+          args: Prisma.prestamoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>[]
+        }
+        create: {
+          args: Prisma.prestamoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>
+        }
+        createMany: {
+          args: Prisma.prestamoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.prestamoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>[]
+        }
+        delete: {
+          args: Prisma.prestamoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>
+        }
+        update: {
+          args: Prisma.prestamoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>
+        }
+        deleteMany: {
+          args: Prisma.prestamoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.prestamoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.prestamoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>[]
+        }
+        upsert: {
+          args: Prisma.prestamoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$prestamoPayload>
+        }
+        aggregate: {
+          args: Prisma.PrestamoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrestamo>
+        }
+        groupBy: {
+          args: Prisma.prestamoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrestamoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.prestamoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrestamoCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -608,7 +683,6 @@ export const LibroScalarFieldEnum = {
   autor: 'autor',
   anioPublicacion: 'anioPublicacion',
   prestado: 'prestado',
-  usuarioId: 'usuarioId',
   editorial: 'editorial',
   edicion: 'edicion',
   isbn: 'isbn'
@@ -625,6 +699,17 @@ export const UsuarioScalarFieldEnum = {
 } as const
 
 export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeof UsuarioScalarFieldEnum]
+
+
+export const PrestamoScalarFieldEnum = {
+  id: 'id',
+  fechaPrestamo: 'fechaPrestamo',
+  fechaDevolucion: 'fechaDevolucion',
+  libroId: 'libroId',
+  usuarioId: 'usuarioId'
+} as const
+
+export type PrestamoScalarFieldEnum = (typeof PrestamoScalarFieldEnum)[keyof typeof PrestamoScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -689,6 +774,20 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -790,6 +889,7 @@ export interface PrismaClientOptions {
 export type GlobalOmitConfig = {
   libro?: Prisma.libroOmit
   usuario?: Prisma.usuarioOmit
+  prestamo?: Prisma.prestamoOmit
 }
 
 /* Types for Logging */

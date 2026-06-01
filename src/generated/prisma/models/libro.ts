@@ -39,7 +39,6 @@ export type LibroMinAggregateOutputType = {
   autor: string | null
   anioPublicacion: number | null
   prestado: boolean | null
-  usuarioId: string | null
   editorial: string | null
   edicion: string | null
   isbn: string | null
@@ -51,7 +50,6 @@ export type LibroMaxAggregateOutputType = {
   autor: string | null
   anioPublicacion: number | null
   prestado: boolean | null
-  usuarioId: string | null
   editorial: string | null
   edicion: string | null
   isbn: string | null
@@ -63,7 +61,6 @@ export type LibroCountAggregateOutputType = {
   autor: number
   anioPublicacion: number
   prestado: number
-  usuarioId: number
   editorial: number
   edicion: number
   isbn: number
@@ -85,7 +82,6 @@ export type LibroMinAggregateInputType = {
   autor?: true
   anioPublicacion?: true
   prestado?: true
-  usuarioId?: true
   editorial?: true
   edicion?: true
   isbn?: true
@@ -97,7 +93,6 @@ export type LibroMaxAggregateInputType = {
   autor?: true
   anioPublicacion?: true
   prestado?: true
-  usuarioId?: true
   editorial?: true
   edicion?: true
   isbn?: true
@@ -109,7 +104,6 @@ export type LibroCountAggregateInputType = {
   autor?: true
   anioPublicacion?: true
   prestado?: true
-  usuarioId?: true
   editorial?: true
   edicion?: true
   isbn?: true
@@ -208,7 +202,6 @@ export type LibroGroupByOutputType = {
   autor: string
   anioPublicacion: number
   prestado: boolean
-  usuarioId: string | null
   editorial: string | null
   edicion: string | null
   isbn: string | null
@@ -243,11 +236,10 @@ export type libroWhereInput = {
   autor?: Prisma.StringFilter<"libro"> | string
   anioPublicacion?: Prisma.IntFilter<"libro"> | number
   prestado?: Prisma.BoolFilter<"libro"> | boolean
-  usuarioId?: Prisma.StringNullableFilter<"libro"> | string | null
   editorial?: Prisma.StringNullableFilter<"libro"> | string | null
   edicion?: Prisma.StringNullableFilter<"libro"> | string | null
   isbn?: Prisma.StringNullableFilter<"libro"> | string | null
-  usuario?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.usuarioWhereInput> | null
+  prestamos?: Prisma.PrestamoListRelationFilter
 }
 
 export type libroOrderByWithRelationInput = {
@@ -256,11 +248,10 @@ export type libroOrderByWithRelationInput = {
   autor?: Prisma.SortOrder
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
-  usuarioId?: Prisma.SortOrderInput | Prisma.SortOrder
   editorial?: Prisma.SortOrderInput | Prisma.SortOrder
   edicion?: Prisma.SortOrderInput | Prisma.SortOrder
   isbn?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario?: Prisma.usuarioOrderByWithRelationInput
+  prestamos?: Prisma.prestamoOrderByRelationAggregateInput
 }
 
 export type libroWhereUniqueInput = Prisma.AtLeast<{
@@ -273,10 +264,9 @@ export type libroWhereUniqueInput = Prisma.AtLeast<{
   autor?: Prisma.StringFilter<"libro"> | string
   anioPublicacion?: Prisma.IntFilter<"libro"> | number
   prestado?: Prisma.BoolFilter<"libro"> | boolean
-  usuarioId?: Prisma.StringNullableFilter<"libro"> | string | null
   editorial?: Prisma.StringNullableFilter<"libro"> | string | null
   edicion?: Prisma.StringNullableFilter<"libro"> | string | null
-  usuario?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.usuarioWhereInput> | null
+  prestamos?: Prisma.PrestamoListRelationFilter
 }, "id" | "isbn">
 
 export type libroOrderByWithAggregationInput = {
@@ -285,7 +275,6 @@ export type libroOrderByWithAggregationInput = {
   autor?: Prisma.SortOrder
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
-  usuarioId?: Prisma.SortOrderInput | Prisma.SortOrder
   editorial?: Prisma.SortOrderInput | Prisma.SortOrder
   edicion?: Prisma.SortOrderInput | Prisma.SortOrder
   isbn?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -305,7 +294,6 @@ export type libroScalarWhereWithAggregatesInput = {
   autor?: Prisma.StringWithAggregatesFilter<"libro"> | string
   anioPublicacion?: Prisma.IntWithAggregatesFilter<"libro"> | number
   prestado?: Prisma.BoolWithAggregatesFilter<"libro"> | boolean
-  usuarioId?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
   editorial?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
   edicion?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
   isbn?: Prisma.StringNullableWithAggregatesFilter<"libro"> | string | null
@@ -320,7 +308,7 @@ export type libroCreateInput = {
   editorial?: string | null
   edicion?: string | null
   isbn?: string | null
-  usuario?: Prisma.usuarioCreateNestedOneWithoutLibrosInput
+  prestamos?: Prisma.prestamoCreateNestedManyWithoutLibroInput
 }
 
 export type libroUncheckedCreateInput = {
@@ -329,10 +317,10 @@ export type libroUncheckedCreateInput = {
   autor: string
   anioPublicacion: number
   prestado?: boolean
-  usuarioId?: string | null
   editorial?: string | null
   edicion?: string | null
   isbn?: string | null
+  prestamos?: Prisma.prestamoUncheckedCreateNestedManyWithoutLibroInput
 }
 
 export type libroUpdateInput = {
@@ -344,7 +332,7 @@ export type libroUpdateInput = {
   editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  usuario?: Prisma.usuarioUpdateOneWithoutLibrosNestedInput
+  prestamos?: Prisma.prestamoUpdateManyWithoutLibroNestedInput
 }
 
 export type libroUncheckedUpdateInput = {
@@ -353,10 +341,10 @@ export type libroUncheckedUpdateInput = {
   autor?: Prisma.StringFieldUpdateOperationsInput | string
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  usuarioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prestamos?: Prisma.prestamoUncheckedUpdateManyWithoutLibroNestedInput
 }
 
 export type libroCreateManyInput = {
@@ -365,7 +353,6 @@ export type libroCreateManyInput = {
   autor: string
   anioPublicacion: number
   prestado?: boolean
-  usuarioId?: string | null
   editorial?: string | null
   edicion?: string | null
   isbn?: string | null
@@ -388,7 +375,6 @@ export type libroUncheckedUpdateManyInput = {
   autor?: Prisma.StringFieldUpdateOperationsInput | string
   anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
   prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  usuarioId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -400,7 +386,6 @@ export type libroCountOrderByAggregateInput = {
   autor?: Prisma.SortOrder
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
-  usuarioId?: Prisma.SortOrder
   editorial?: Prisma.SortOrder
   edicion?: Prisma.SortOrder
   isbn?: Prisma.SortOrder
@@ -416,7 +401,6 @@ export type libroMaxOrderByAggregateInput = {
   autor?: Prisma.SortOrder
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
-  usuarioId?: Prisma.SortOrder
   editorial?: Prisma.SortOrder
   edicion?: Prisma.SortOrder
   isbn?: Prisma.SortOrder
@@ -428,7 +412,6 @@ export type libroMinOrderByAggregateInput = {
   autor?: Prisma.SortOrder
   anioPublicacion?: Prisma.SortOrder
   prestado?: Prisma.SortOrder
-  usuarioId?: Prisma.SortOrder
   editorial?: Prisma.SortOrder
   edicion?: Prisma.SortOrder
   isbn?: Prisma.SortOrder
@@ -438,14 +421,9 @@ export type libroSumOrderByAggregateInput = {
   anioPublicacion?: Prisma.SortOrder
 }
 
-export type LibroListRelationFilter = {
-  every?: Prisma.libroWhereInput
-  some?: Prisma.libroWhereInput
-  none?: Prisma.libroWhereInput
-}
-
-export type libroOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type LibroScalarRelationFilter = {
+  is?: Prisma.libroWhereInput
+  isNot?: Prisma.libroWhereInput
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -468,49 +446,21 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type libroCreateNestedManyWithoutUsuarioInput = {
-  create?: Prisma.XOR<Prisma.libroCreateWithoutUsuarioInput, Prisma.libroUncheckedCreateWithoutUsuarioInput> | Prisma.libroCreateWithoutUsuarioInput[] | Prisma.libroUncheckedCreateWithoutUsuarioInput[]
-  connectOrCreate?: Prisma.libroCreateOrConnectWithoutUsuarioInput | Prisma.libroCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.libroCreateManyUsuarioInputEnvelope
-  connect?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
+export type libroCreateNestedOneWithoutPrestamosInput = {
+  create?: Prisma.XOR<Prisma.libroCreateWithoutPrestamosInput, Prisma.libroUncheckedCreateWithoutPrestamosInput>
+  connectOrCreate?: Prisma.libroCreateOrConnectWithoutPrestamosInput
+  connect?: Prisma.libroWhereUniqueInput
 }
 
-export type libroUncheckedCreateNestedManyWithoutUsuarioInput = {
-  create?: Prisma.XOR<Prisma.libroCreateWithoutUsuarioInput, Prisma.libroUncheckedCreateWithoutUsuarioInput> | Prisma.libroCreateWithoutUsuarioInput[] | Prisma.libroUncheckedCreateWithoutUsuarioInput[]
-  connectOrCreate?: Prisma.libroCreateOrConnectWithoutUsuarioInput | Prisma.libroCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.libroCreateManyUsuarioInputEnvelope
-  connect?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
+export type libroUpdateOneRequiredWithoutPrestamosNestedInput = {
+  create?: Prisma.XOR<Prisma.libroCreateWithoutPrestamosInput, Prisma.libroUncheckedCreateWithoutPrestamosInput>
+  connectOrCreate?: Prisma.libroCreateOrConnectWithoutPrestamosInput
+  upsert?: Prisma.libroUpsertWithoutPrestamosInput
+  connect?: Prisma.libroWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.libroUpdateToOneWithWhereWithoutPrestamosInput, Prisma.libroUpdateWithoutPrestamosInput>, Prisma.libroUncheckedUpdateWithoutPrestamosInput>
 }
 
-export type libroUpdateManyWithoutUsuarioNestedInput = {
-  create?: Prisma.XOR<Prisma.libroCreateWithoutUsuarioInput, Prisma.libroUncheckedCreateWithoutUsuarioInput> | Prisma.libroCreateWithoutUsuarioInput[] | Prisma.libroUncheckedCreateWithoutUsuarioInput[]
-  connectOrCreate?: Prisma.libroCreateOrConnectWithoutUsuarioInput | Prisma.libroCreateOrConnectWithoutUsuarioInput[]
-  upsert?: Prisma.libroUpsertWithWhereUniqueWithoutUsuarioInput | Prisma.libroUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.libroCreateManyUsuarioInputEnvelope
-  set?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  disconnect?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  delete?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  connect?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  update?: Prisma.libroUpdateWithWhereUniqueWithoutUsuarioInput | Prisma.libroUpdateWithWhereUniqueWithoutUsuarioInput[]
-  updateMany?: Prisma.libroUpdateManyWithWhereWithoutUsuarioInput | Prisma.libroUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.libroScalarWhereInput | Prisma.libroScalarWhereInput[]
-}
-
-export type libroUncheckedUpdateManyWithoutUsuarioNestedInput = {
-  create?: Prisma.XOR<Prisma.libroCreateWithoutUsuarioInput, Prisma.libroUncheckedCreateWithoutUsuarioInput> | Prisma.libroCreateWithoutUsuarioInput[] | Prisma.libroUncheckedCreateWithoutUsuarioInput[]
-  connectOrCreate?: Prisma.libroCreateOrConnectWithoutUsuarioInput | Prisma.libroCreateOrConnectWithoutUsuarioInput[]
-  upsert?: Prisma.libroUpsertWithWhereUniqueWithoutUsuarioInput | Prisma.libroUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.libroCreateManyUsuarioInputEnvelope
-  set?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  disconnect?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  delete?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  connect?: Prisma.libroWhereUniqueInput | Prisma.libroWhereUniqueInput[]
-  update?: Prisma.libroUpdateWithWhereUniqueWithoutUsuarioInput | Prisma.libroUpdateWithWhereUniqueWithoutUsuarioInput[]
-  updateMany?: Prisma.libroUpdateManyWithWhereWithoutUsuarioInput | Prisma.libroUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.libroScalarWhereInput | Prisma.libroScalarWhereInput[]
-}
-
-export type libroCreateWithoutUsuarioInput = {
+export type libroCreateWithoutPrestamosInput = {
   id?: string
   titulo: string
   autor: string
@@ -521,7 +471,7 @@ export type libroCreateWithoutUsuarioInput = {
   isbn?: string | null
 }
 
-export type libroUncheckedCreateWithoutUsuarioInput = {
+export type libroUncheckedCreateWithoutPrestamosInput = {
   id?: string
   titulo: string
   autor: string
@@ -532,59 +482,23 @@ export type libroUncheckedCreateWithoutUsuarioInput = {
   isbn?: string | null
 }
 
-export type libroCreateOrConnectWithoutUsuarioInput = {
+export type libroCreateOrConnectWithoutPrestamosInput = {
   where: Prisma.libroWhereUniqueInput
-  create: Prisma.XOR<Prisma.libroCreateWithoutUsuarioInput, Prisma.libroUncheckedCreateWithoutUsuarioInput>
+  create: Prisma.XOR<Prisma.libroCreateWithoutPrestamosInput, Prisma.libroUncheckedCreateWithoutPrestamosInput>
 }
 
-export type libroCreateManyUsuarioInputEnvelope = {
-  data: Prisma.libroCreateManyUsuarioInput | Prisma.libroCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
+export type libroUpsertWithoutPrestamosInput = {
+  update: Prisma.XOR<Prisma.libroUpdateWithoutPrestamosInput, Prisma.libroUncheckedUpdateWithoutPrestamosInput>
+  create: Prisma.XOR<Prisma.libroCreateWithoutPrestamosInput, Prisma.libroUncheckedCreateWithoutPrestamosInput>
+  where?: Prisma.libroWhereInput
 }
 
-export type libroUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.libroWhereUniqueInput
-  update: Prisma.XOR<Prisma.libroUpdateWithoutUsuarioInput, Prisma.libroUncheckedUpdateWithoutUsuarioInput>
-  create: Prisma.XOR<Prisma.libroCreateWithoutUsuarioInput, Prisma.libroUncheckedCreateWithoutUsuarioInput>
+export type libroUpdateToOneWithWhereWithoutPrestamosInput = {
+  where?: Prisma.libroWhereInput
+  data: Prisma.XOR<Prisma.libroUpdateWithoutPrestamosInput, Prisma.libroUncheckedUpdateWithoutPrestamosInput>
 }
 
-export type libroUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.libroWhereUniqueInput
-  data: Prisma.XOR<Prisma.libroUpdateWithoutUsuarioInput, Prisma.libroUncheckedUpdateWithoutUsuarioInput>
-}
-
-export type libroUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.libroScalarWhereInput
-  data: Prisma.XOR<Prisma.libroUpdateManyMutationInput, Prisma.libroUncheckedUpdateManyWithoutUsuarioInput>
-}
-
-export type libroScalarWhereInput = {
-  AND?: Prisma.libroScalarWhereInput | Prisma.libroScalarWhereInput[]
-  OR?: Prisma.libroScalarWhereInput[]
-  NOT?: Prisma.libroScalarWhereInput | Prisma.libroScalarWhereInput[]
-  id?: Prisma.StringFilter<"libro"> | string
-  titulo?: Prisma.StringFilter<"libro"> | string
-  autor?: Prisma.StringFilter<"libro"> | string
-  anioPublicacion?: Prisma.IntFilter<"libro"> | number
-  prestado?: Prisma.BoolFilter<"libro"> | boolean
-  usuarioId?: Prisma.StringNullableFilter<"libro"> | string | null
-  editorial?: Prisma.StringNullableFilter<"libro"> | string | null
-  edicion?: Prisma.StringNullableFilter<"libro"> | string | null
-  isbn?: Prisma.StringNullableFilter<"libro"> | string | null
-}
-
-export type libroCreateManyUsuarioInput = {
-  id?: string
-  titulo: string
-  autor: string
-  anioPublicacion: number
-  prestado?: boolean
-  editorial?: string | null
-  edicion?: string | null
-  isbn?: string | null
-}
-
-export type libroUpdateWithoutUsuarioInput = {
+export type libroUpdateWithoutPrestamosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   autor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -595,7 +509,7 @@ export type libroUpdateWithoutUsuarioInput = {
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type libroUncheckedUpdateWithoutUsuarioInput = {
+export type libroUncheckedUpdateWithoutPrestamosInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   autor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -606,17 +520,35 @@ export type libroUncheckedUpdateWithoutUsuarioInput = {
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type libroUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  autor?: Prisma.StringFieldUpdateOperationsInput | string
-  anioPublicacion?: Prisma.IntFieldUpdateOperationsInput | number
-  prestado?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  editorial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  edicion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+
+/**
+ * Count Type LibroCountOutputType
+ */
+
+export type LibroCountOutputType = {
+  prestamos: number
 }
 
+export type LibroCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  prestamos?: boolean | LibroCountOutputTypeCountPrestamosArgs
+}
+
+/**
+ * LibroCountOutputType without action
+ */
+export type LibroCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LibroCountOutputType
+   */
+  select?: Prisma.LibroCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LibroCountOutputType without action
+ */
+export type LibroCountOutputTypeCountPrestamosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.prestamoWhereInput
+}
 
 
 export type libroSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -625,11 +557,11 @@ export type libroSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   autor?: boolean
   anioPublicacion?: boolean
   prestado?: boolean
-  usuarioId?: boolean
   editorial?: boolean
   edicion?: boolean
   isbn?: boolean
-  usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
+  prestamos?: boolean | Prisma.libro$prestamosArgs<ExtArgs>
+  _count?: boolean | Prisma.LibroCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["libro"]>
 
 export type libroSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -638,11 +570,9 @@ export type libroSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   autor?: boolean
   anioPublicacion?: boolean
   prestado?: boolean
-  usuarioId?: boolean
   editorial?: boolean
   edicion?: boolean
   isbn?: boolean
-  usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
 }, ExtArgs["result"]["libro"]>
 
 export type libroSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -651,11 +581,9 @@ export type libroSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   autor?: boolean
   anioPublicacion?: boolean
   prestado?: boolean
-  usuarioId?: boolean
   editorial?: boolean
   edicion?: boolean
   isbn?: boolean
-  usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
 }, ExtArgs["result"]["libro"]>
 
 export type libroSelectScalar = {
@@ -664,27 +592,23 @@ export type libroSelectScalar = {
   autor?: boolean
   anioPublicacion?: boolean
   prestado?: boolean
-  usuarioId?: boolean
   editorial?: boolean
   edicion?: boolean
   isbn?: boolean
 }
 
-export type libroOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "titulo" | "autor" | "anioPublicacion" | "prestado" | "usuarioId" | "editorial" | "edicion" | "isbn", ExtArgs["result"]["libro"]>
+export type libroOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "titulo" | "autor" | "anioPublicacion" | "prestado" | "editorial" | "edicion" | "isbn", ExtArgs["result"]["libro"]>
 export type libroInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
+  prestamos?: boolean | Prisma.libro$prestamosArgs<ExtArgs>
+  _count?: boolean | Prisma.LibroCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type libroIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
-}
-export type libroIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  usuario?: boolean | Prisma.libro$usuarioArgs<ExtArgs>
-}
+export type libroIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type libroIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $libroPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "libro"
   objects: {
-    usuario: Prisma.$usuarioPayload<ExtArgs> | null
+    prestamos: Prisma.$prestamoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -692,7 +616,6 @@ export type $libroPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     autor: string
     anioPublicacion: number
     prestado: boolean
-    usuarioId: string | null
     editorial: string | null
     edicion: string | null
     isbn: string | null
@@ -1090,7 +1013,7 @@ readonly fields: libroFieldRefs;
  */
 export interface Prisma__libroClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  usuario<T extends Prisma.libro$usuarioArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.libro$usuarioArgs<ExtArgs>>): Prisma.Prisma__usuarioClient<runtime.Types.Result.GetResult<Prisma.$usuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  prestamos<T extends Prisma.libro$prestamosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.libro$prestamosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$prestamoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1125,7 +1048,6 @@ export interface libroFieldRefs {
   readonly autor: Prisma.FieldRef<"libro", 'String'>
   readonly anioPublicacion: Prisma.FieldRef<"libro", 'Int'>
   readonly prestado: Prisma.FieldRef<"libro", 'Boolean'>
-  readonly usuarioId: Prisma.FieldRef<"libro", 'String'>
   readonly editorial: Prisma.FieldRef<"libro", 'String'>
   readonly edicion: Prisma.FieldRef<"libro", 'String'>
   readonly isbn: Prisma.FieldRef<"libro", 'String'>
@@ -1378,10 +1300,6 @@ export type libroCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    */
   data: Prisma.libroCreateManyInput | Prisma.libroCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.libroIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1452,10 +1370,6 @@ export type libroUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many libros to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.libroIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1525,22 +1439,27 @@ export type libroDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * libro.usuario
+ * libro.prestamos
  */
-export type libro$usuarioArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type libro$prestamosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the usuario
+   * Select specific fields to fetch from the prestamo
    */
-  select?: Prisma.usuarioSelect<ExtArgs> | null
+  select?: Prisma.prestamoSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the usuario
+   * Omit specific fields from the prestamo
    */
-  omit?: Prisma.usuarioOmit<ExtArgs> | null
+  omit?: Prisma.prestamoOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.usuarioInclude<ExtArgs> | null
-  where?: Prisma.usuarioWhereInput
+  include?: Prisma.prestamoInclude<ExtArgs> | null
+  where?: Prisma.prestamoWhereInput
+  orderBy?: Prisma.prestamoOrderByWithRelationInput | Prisma.prestamoOrderByWithRelationInput[]
+  cursor?: Prisma.prestamoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrestamoScalarFieldEnum | Prisma.PrestamoScalarFieldEnum[]
 }
 
 /**

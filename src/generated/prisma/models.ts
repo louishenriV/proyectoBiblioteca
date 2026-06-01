@@ -9,4 +9,5 @@
  */
 export type * from './models/libro.js'
 export type * from './models/usuario.js'
+export type * from './models/prestamo.js'
 export type * from './commonInputTypes.js'

@@ -51,5 +51,10 @@ export type libro = Prisma.libroModel
  * 
  */
 export type usuario = Prisma.usuarioModel
+/**
+ * Model prestamo
+ * 
+ */
+export type prestamo = Prisma.prestamoModel
 
 
