@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { crearPrestamo, devolverLibro } from "../services/prestamoService.js";
+import { crearPrestamo, devolverLibro, obtenerPrestamosActivos, obtenerHistorialPrestamos } from "../services/prestamoService.js";
 
 const app = Router();
 
@@ -24,6 +24,29 @@ app.put("/:id/devolver", async (req, res) => {
         res.json({ mensaje: "Libro devuelto", prestamo: prestamoDevuelto });
     } catch (error:any) {
         res.status(400).json({ error: "Error al devolver el libro: " + error.message });
+    }
+});
+
+
+app.get("/activos", async (req, res) => {
+    const { id: usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
+
+    try {
+        const prestamosActivos = await obtenerPrestamosActivos(usuarioId);
+        res.json({ prestamos: prestamosActivos });
+    } catch (error:any) {
+        res.status(400).json({ error: "Error al obtener préstamos activos: " + error.message });
+    }
+});
+
+app.get("/historial", async (req, res) => {
+    const { id: usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
+
+    try {
+        const historialPrestamos = await obtenerHistorialPrestamos(usuarioId);
+        res.json({ prestamos: historialPrestamos });
+    } catch (error:any) {
+        res.status(400).json({ error: "Error al obtener historial de préstamos: " + error.message });
     }
 });
 

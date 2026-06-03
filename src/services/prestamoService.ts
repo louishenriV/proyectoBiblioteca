@@ -28,3 +28,21 @@ export const devolverLibro = async (prestamoId: string) => {
         throw new Error("Error al devolver el libro");
     }
 }; 
+
+export const obtenerPrestamosActivos = async (usuarioId: string) => { //filtrar prestamos activos por usuario, si no, devuelve todos los prestamos activos de todos los usuarios, lo cual no es lo ideal
+    return await prisma.prestamo.findMany({ //con findMany, podemos filtrar por fecha de devolución nula y por usuarioId
+        where: { fechaDevolucion: null, usuarioId },
+        include: {
+            usuario: { select: { id: true, nombre: true, email: true } } //nos aseguramos de no incluir el password del usuario en la respuesta, por seguridad
+        }
+    });
+};
+
+export const obtenerHistorialPrestamos = async (usuarioId: string) => {
+    return await prisma.prestamo.findMany({
+        where: { usuarioId },
+        include: {
+            usuario: { select: { id: true, nombre: true, email: true } }
+        }
+    });
+};
