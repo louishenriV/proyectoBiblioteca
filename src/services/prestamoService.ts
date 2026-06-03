@@ -2,20 +2,29 @@ import prisma from "../prismaClient.js";
 
 //crear prestamo
 export const crearPrestamo = async (data:any) => {
+    
     const { libroId, usuarioId } = data;
+      const prestamoActivo = await prisma.prestamo.findFirst({
+        where: { libroId, fechaDevolucion: null }
+    });
+
+    if (prestamoActivo) {
+        throw new Error("El libro ya está prestado");
+    }
+
     try {
     const nuevoPrestamo = await prisma.prestamo.create({
         data: {
             libroId,
             usuarioId, 
             fechaPrestamo: new Date()
-  }  
-})
-return nuevoPrestamo;
-} catch (error) {
-    throw new Error("Error al crear el préstamo");
-}
-};
+        }  
+    })
+    return nuevoPrestamo;
+    } catch (error) {
+        throw new Error("Error al crear el préstamo");
+    }
+    };
 
 export const devolverLibro = async (prestamoId: string) => {
     try {
