@@ -1,5 +1,6 @@
 import { Router } from "express"
 import { obtenerLibros, agregarLibro, eliminarLibro } from "../services/bibliotecaService.js";
+import { checarDisponibilidad } from "../services/prestamoService.js";
 
 const app = Router()
 
@@ -38,6 +39,19 @@ app.post("/", async (req, res) => {
     }//si no lo especificamos, devuelve por default 200 y eso es engañoso si se supone es un error
 
 }) 
+
+//checar disponibilidad de un libro con GET, ruta /libros/:id/disponibilidad
+app.get("/:id/disponibilidad", async (req, res) => {
+    const { id: libroId } = req.params;
+
+    try {
+        const disponible = await checarDisponibilidad(libroId);
+        res.json({ libroId, disponible });
+    } catch (error:any) {
+        res.status(400).json({ error: "Error al checar disponibilidad: " + error.message });
+    }
+}); 
+
 
 //Eliminar un libro con DELETE
 app.delete("/:id", async (req, res) => {

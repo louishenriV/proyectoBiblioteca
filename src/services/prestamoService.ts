@@ -55,3 +55,14 @@ export const obtenerHistorialPrestamos = async (usuarioId: string) => {
         }
     });
 };
+
+export const checarDisponibilidad = async (libroId: string) => {
+    try {
+    const prestamoActivo = await prisma.prestamo.findFirst({
+        where: { libroId, fechaDevolucion: null }
+    });
+    return !prestamoActivo; // !prestamoActivo = false. Si no hay un préstamo activo, el libro está disponible
+} catch (error) {
+    throw new Error("Error al verificar disponibilidad del libro");
+}
+};

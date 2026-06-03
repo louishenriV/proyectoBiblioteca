@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { crearPrestamo, devolverLibro, obtenerPrestamosActivos, obtenerHistorialPrestamos } from "../services/prestamoService.js";
+import { crearPrestamo, devolverLibro, obtenerPrestamosActivos, obtenerHistorialPrestamos} from "../services/prestamoService.js";
 import { Libro } from "../models/Libro.js";
 
 const app = Router();
