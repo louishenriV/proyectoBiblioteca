@@ -16,3 +16,15 @@ return nuevoPrestamo;
     throw new Error("Error al crear el préstamo");
 }
 };
+
+export const devolverLibro = async (prestamoId: string) => {
+    try {
+        const prestamo = await prisma.prestamo.update({
+            where: { id: prestamoId },
+            data: { fechaDevolucion: new Date() }
+        });
+        return prestamo;
+    } catch (error) {
+        throw new Error("Error al devolver el libro");
+    }
+}; 
