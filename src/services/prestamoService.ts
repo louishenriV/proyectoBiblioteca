@@ -1,7 +1,13 @@
 import prisma from "../prismaClient.js";
 
+//definir PrestamoData para tipar los datos que se reciben al crear un préstamo
+type PrestamoData = {
+    libroId: string;
+    usuarioId: string;
+};
+
 //crear prestamo
-export const crearPrestamo = async (data:any) => {
+export const crearPrestamo = async (data: PrestamoData) => {
     
     const { libroId, usuarioId } = data;
       const prestamoActivo = await prisma.prestamo.findFirst({

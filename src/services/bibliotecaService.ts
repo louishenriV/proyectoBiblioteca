@@ -8,8 +8,18 @@ export const obtenerLibros = async () => {
   //conectarse a PostgreSQL, hacer la consulta, esperar la respuesta y traerla de vuelta
 };
 
+//definir LibroData para tipar los datos que se reciben al agregar un libro
+type LibroData = {
+    titulo: string;
+    autor: string;
+    anioPublicacion: number;
+    editorial?: string; 
+    edicion?: string;
+    isbn?: string; 
+};
+
 //agregar un libro
-export const agregarLibro = async (data:any) => { //recibe datos desde la API
+export const agregarLibro = async (data: LibroData) => { //recibe datos desde la API
      const {titulo, autor, anioPublicacion, editorial, edicion, isbn} = data;
     //recibimos los datos del cliente y se extraen con destructuring en un JSON
     
@@ -18,9 +28,9 @@ export const agregarLibro = async (data:any) => { //recibe datos desde la API
             titulo,
             autor,
             anioPublicacion,
-            editorial: editorial ?? undefined,
-            edicion: edicion ?? undefined,
-            isbn: isbn ?? undefined
+            editorial: editorial ?? null,
+            edicion: edicion ?? null,
+            isbn: isbn ?? null
         }
     })
 
