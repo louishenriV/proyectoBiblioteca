@@ -1,12 +1,15 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import { registrarUsuario, loginUsuario} from "../services/authService.js";
+import { registrarUsuario, loginUsuario, eliminarUsuario} from "../services/authService.js";
+import { adminMiddleware } from "../middlewares/admin.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const app = Router(); 
 export default app;
 
 const saltRounds = 10; //definimos el número de rondas de sal para bcrypt, esto afecta la seguridad y el tiempo de procesamiento
 
+//Crear usuario con POST, ruta /auth/registro
 app.post("/registro", async (req, res) => {
     const { nombre, email, password } = req.body;
 
@@ -41,6 +44,7 @@ app.post("/registro", async (req, res) => {
     }
 })
 
+//Login de usuario con POST, ruta /auth/login
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -61,3 +65,17 @@ app.post("/login", async (req, res) => {
         }
 })
 
+//eliminar usuario con DELETE, ruta /auth/eliminar
+app.delete("/eliminar", authMiddleware, adminMiddleware, async (req, res) => {
+    const { email } = req.body;
+    if (typeof email !== "string") {
+        res.status(400).json({ mensaje: "Datos inválidos o incompletos" });
+        return;
+    }
+    try {
+        await eliminarUsuario(email);
+        res.json({ mensaje: "Usuario eliminado" });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al eliminar usuario", error });
+    }   
+})

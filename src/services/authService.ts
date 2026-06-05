@@ -17,7 +17,7 @@ export const registrarUsuario = async (data:any) => {
         } 
     })
     return nuevoUsuario;
-} 
+}; 
 
 export const loginUsuario = async (email:string, password:string) => {
     try {
@@ -35,7 +35,27 @@ export const loginUsuario = async (email:string, password:string) => {
         process.env.JWT_SECRET!, { expiresIn: process.env.JWT_EXPIRES_IN || "1h" as any });
         return token;
         
-} catch (error) {
-    throw error;
+    } catch (error) {
+        throw error;
 }   
-}
+};
+
+export const eliminarUsuario = async (email:string) => {
+    try {
+        const usuario = await prisma.usuario.findUnique({ //Buscar usuario por email para obtener su id
+            where: { email }
+        })
+        if (!usuario) {
+            throw new Error("Usuario no encontrado");
+        }
+        await prisma.prestamo.deleteMany({ //usar ese id para eliminar los prestamos asociados
+            where: { usuarioId: usuario.id }
+        })
+        await prisma.usuario.delete({ //eliminar el usuario
+            where: { email }
+        })
+        return { mensaje: "Usuario eliminado" };
+        } catch (error) {
+        throw error;
+        }
+};
