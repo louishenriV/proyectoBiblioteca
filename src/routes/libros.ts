@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { obtenerLibros, agregarLibro, eliminarLibro } from "../services/bibliotecaService.js";
 import { checarDisponibilidad } from "../services/prestamoService.js";
+import { adminMiddleware } from "../middlewares/admin.middleware.js";
 
 const app = Router()
 
@@ -18,7 +19,7 @@ necesario volverlo a poner en la ruta porque si no sería como pedir la ruta lib
 
 
 //crear libro con POST, ruta /libros
-app.post("/", async (req, res) => {
+app.post("/", adminMiddleware, async (req, res) => {
     // Extraemos los datos del body para validarlos antes de pasarlos al servicio
     const { titulo, autor, anioPublicacion, editorial, edicion, isbn } = req.body;
 
@@ -54,9 +55,9 @@ app.get("/:id/disponibilidad", async (req, res) => {
 
 
 //Eliminar un libro con DELETE
-app.delete("/:id", async (req, res) => {
+app.delete("/:id", adminMiddleware, async (req, res) => {
     try{
-    const { id } = req.params;
+    const id = String(req.params["id"]) //obtenemos el id del libro a eliminar de los parametros de la ruta;
     await eliminarLibro(id) //pasamos el id del usuario al servicio para que solo pueda eliminar libros asociados a ese usuario;
     res.status(200).json({mensaje : "Libro eliminado"})
     } catch (error: any){

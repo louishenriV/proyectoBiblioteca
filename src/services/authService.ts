@@ -31,7 +31,7 @@ export const loginUsuario = async (email:string, password:string) => {
         const match = await bcrypt.compare(password, usuarioEncontrado!.password); //usuarioEncontrado! se usa para indicar que estamos seguros de que no es null, ya que si fuera null, el código no llegaría a esta línea debido al return anterior   
         if (!match) return null;
 
-        const token = jwt.sign({ id: usuarioEncontrado!.id, email: usuarioEncontrado!.email }, 
+        const token = jwt.sign({ id: usuarioEncontrado!.id, email: usuarioEncontrado!.email, rol: usuarioEncontrado!.rol }, 
         process.env.JWT_SECRET!, { expiresIn: process.env.JWT_EXPIRES_IN || "1h" as any });
         return token;
         

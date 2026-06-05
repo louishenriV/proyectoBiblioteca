@@ -28,12 +28,18 @@ model libro{
 
 }
 
+enum Rol {
+  admin
+  user
+}
+
 model usuario{
   id       String @id @default(uuid())
   nombre   String
   email    String @unique
   password String
   prestamos prestamo[] 
+  rol Rol @default(user)
 }
 
 model prestamo{

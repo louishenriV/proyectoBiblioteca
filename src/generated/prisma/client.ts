@@ -57,4 +57,5 @@ export type usuario = Prisma.usuarioModel
  */
 export type prestamo = Prisma.prestamoModel
 
-
+export type Rol = $Enums.Rol
+export const Rol = $Enums.Rol
