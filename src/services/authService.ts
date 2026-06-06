@@ -2,7 +2,13 @@ import prisma from "../prismaClient.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export const registrarUsuario = async (data:any) => {
+type UsuarioData = {
+    nombre: string;
+    email: string;
+    password: string;
+};
+
+export const registrarUsuario = async (data:UsuarioData) => {
     const { nombre, email, password } = data;
     const nuevoUsuario = await prisma.usuario.create({
         data: {
