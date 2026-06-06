@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { obtenerLibros, agregarLibro, eliminarLibro } from "../services/bibliotecaService.js";
+import { obtenerLibros, agregarLibro, eliminarLibro, verLibro } from "../services/bibliotecaService.js";
 import { checarDisponibilidad } from "../services/prestamoService.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
 
@@ -69,6 +69,21 @@ app.delete("/:id", adminMiddleware, async (req, res) => {
     }
 })
 
+
+//ver un libro por su ID con GET, ruta /libros/:id
+app.get("/:id", async (req, res) => {
+    try{
+        const { id } = req.params;
+        const libro = await verLibro(id);
+        if (!libro) {
+            res.status(404).json({ mensaje: "Libro no encontrado" });
+            return;
+        }
+        res.json(libro);
+    } catch (error: any) {
+        res.status(404).json({ mensaje: "Libro no encontrado" });
+    }
+});
 
 
 export default app;

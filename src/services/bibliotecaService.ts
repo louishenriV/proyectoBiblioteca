@@ -43,3 +43,14 @@ export const eliminarLibro = async (id:string) => {
         where: { id }
     })
 };
+
+
+export const verLibro = async (id:string) => {
+    try {
+    return await prisma.libro.findUnique({ //buscar un libro por su ID
+        where: { id }
+    }) 
+    } catch (error) {
+        throw new Error("No se pudo encontrar el libro");
+    }
+}
