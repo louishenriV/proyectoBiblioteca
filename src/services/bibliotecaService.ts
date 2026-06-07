@@ -54,3 +54,34 @@ export const verLibro = async (id:string) => {
         throw new Error("No se pudo encontrar el libro");
     }
 }
+
+
+type actualizarLibroData = {
+    titulo?: string;
+    autor?: string;
+    anioPublicacion?: number;
+    editorial?: string; 
+    edicion?: string;
+    isbn?: string; 
+};
+
+//actualizar un libro
+export const actualizarLibro = async (id:string, data: actualizarLibroData) => {
+    const dataActualizada: any = {};
+    if (data.titulo) dataActualizada.titulo = data.titulo; //sólo agregamos al objeto dataActualizada las propiedades que se proporcionan en el objeto data, esto permite actualizaciones parciales sin sobrescribir campos no proporcionados
+    if (data.autor) dataActualizada.autor = data.autor;
+    if (data.anioPublicacion) dataActualizada.anioPublicacion = data.anioPublicacion;
+    if (data.editorial !== undefined) dataActualizada.editorial = data.editorial ?? null; //si editorial se proporciona como null, se establece como null, si no se proporciona, se deja como undefined para que Prisma no lo actualice
+    if (data.edicion !== undefined) dataActualizada.edicion = data.edicion ?? null; 
+    if (data.isbn !== undefined) dataActualizada.isbn = data.isbn ?? null;
+    try {
+        const libroActualizado = await prisma.libro.update({ //prisma recibe y actualiza sólo los campor proporcionados
+            where: { id },
+            data: dataActualizada
+        });
+        return libroActualizado;
+    } catch (error) {
+        throw new Error("No se pudo actualizar el libro");
+    }
+};
+                

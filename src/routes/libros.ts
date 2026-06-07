@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { obtenerLibros, agregarLibro, eliminarLibro, verLibro } from "../services/bibliotecaService.js";
+import { obtenerLibros, agregarLibro, eliminarLibro, verLibro, actualizarLibro } from "../services/bibliotecaService.js";
 import { checarDisponibilidad } from "../services/prestamoService.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
 
@@ -85,5 +85,17 @@ app.get("/:id", async (req, res) => {
     }
 });
 
+
+app.put("/:id", adminMiddleware, async (req, res) => {
+    const id = req.params["id"] as string;
+    const data = req.body;
+
+    try {
+        const libroActualizado = await actualizarLibro(id, data);
+        res.json({ mensaje: "Libro actualizado", libro: libroActualizado });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al actualizar el libro", error });
+    }
+});
 
 export default app;
