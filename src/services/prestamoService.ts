@@ -57,7 +57,8 @@ export const obtenerHistorialPrestamos = async (usuarioId: string) => {
     return await prisma.prestamo.findMany({
         where: { usuarioId },
         include: {
-            usuario: { select: { id: true, nombre: true, email: true } }
+            usuario: { select: { id: true, nombre: true, email: true } },
+            libro: true
         }
     });
 };

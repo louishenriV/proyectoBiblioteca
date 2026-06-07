@@ -84,4 +84,16 @@ export const actualizarLibro = async (id:string, data: actualizarLibroData) => {
         throw new Error("No se pudo actualizar el libro");
     }
 };
+
+
+export const buscarLibros = async (query: string) => {
+    return await prisma.libro.findMany({
+        where: {
+            OR: [
+                { titulo: { contains: query, mode: "insensitive" } }, //verifica si la consulta está contenida en el título, autor o año de publicación, sin importar mayúsculas o minúsculas
+                { autor: { contains: query, mode: "insensitive" } }
+            ]
+        }
+    });
+}
                 

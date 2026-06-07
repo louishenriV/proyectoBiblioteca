@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { obtenerLibros, agregarLibro, eliminarLibro, verLibro, actualizarLibro } from "../services/bibliotecaService.js";
+import { obtenerLibros, agregarLibro, eliminarLibro, verLibro, actualizarLibro, buscarLibros } from "../services/bibliotecaService.js";
 import { checarDisponibilidad } from "../services/prestamoService.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
 
@@ -40,6 +40,21 @@ app.post("/", adminMiddleware, async (req, res) => {
     }//si no lo especificamos, devuelve por default 200 y eso es engañoso si se supone es un error
 
 }) 
+
+
+app.get("/buscar", async (req, res) => {
+    const { q } = req.query; //convencion comun en APIs para indicar el término "query"
+    if (!q || typeof q !== "string") { //validamos que el término de búsqueda exista y sea una cadena de texto, si no, respondemos con un error 400 (Bad Request)
+        res.status(400).json({ mensaje: "Debes proporcionar un término de búsqueda" });
+        return;
+    }
+    try {
+        const resultados = await buscarLibros(q);
+        res.json(resultados);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al buscar libros", error });
+    }
+});
 
 //checar disponibilidad de un libro con GET, ruta /libros/:id/disponibilidad
 app.get("/:id/disponibilidad", async (req, res) => {
@@ -97,5 +112,6 @@ app.put("/:id", adminMiddleware, async (req, res) => {
         res.status(500).json({ mensaje: "Error al actualizar el libro", error });
     }
 });
+
 
 export default app;

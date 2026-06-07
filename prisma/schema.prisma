@@ -20,7 +20,6 @@ model libro{
   titulo          String
   autor           String
   anioPublicacion Int
-  prestado        Boolean @default(false)
   editorial       String?
   edicion         String?
   isbn            String? @unique

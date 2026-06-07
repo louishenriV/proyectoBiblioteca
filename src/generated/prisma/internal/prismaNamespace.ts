@@ -682,7 +682,6 @@ export const LibroScalarFieldEnum = {
   titulo: 'titulo',
   autor: 'autor',
   anioPublicacion: 'anioPublicacion',
-  prestado: 'prestado',
   editorial: 'editorial',
   edicion: 'edicion',
   isbn: 'isbn'
@@ -768,13 +767,6 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
