@@ -8,17 +8,20 @@ type PrestamoData = {
 
 //crear prestamo
 export const crearPrestamo = async (data: PrestamoData) => {
-    
     const { libroId, usuarioId } = data;
-      const prestamoActivo = await prisma.prestamo.findFirst({
+    try {
+    const existeLibro = await prisma.libro.findUnique({ where: { id: libroId } });
+    if (!existeLibro) {
+        throw new Error("El libro no existe");
+    };  
+    const prestamoActivo = await prisma.prestamo.findFirst({
         where: { libroId, fechaDevolucion: null }
     });
 
     if (prestamoActivo) {
         throw new Error("El libro ya está prestado");
     }
-
-    try {
+  
     const nuevoPrestamo = await prisma.prestamo.create({
         data: {
             libroId,
@@ -28,9 +31,9 @@ export const crearPrestamo = async (data: PrestamoData) => {
     })
     return nuevoPrestamo;
     } catch (error) {
-        throw new Error("Error al crear el préstamo");
+        throw new Error("El libro no existe");
     }
-    };
+};
 
 export const devolverLibro = async (prestamoId: string) => {
     try {
