@@ -74,7 +74,7 @@ app.delete("/:id", adminMiddleware, async (req, res) => {
     try{
     const id = String(req.params["id"]) //obtenemos el id del libro a eliminar de los parametros de la ruta;
     await eliminarLibro(id) //pasamos el id del usuario al servicio para que solo pueda eliminar libros asociados a ese usuario;
-    res.status(200).json({mensaje : "Libro eliminado"})
+    res.status(204).json({mensaje : "Libro eliminado"})
     } catch (error: any){
         if (error.code === "P2025") {
         res.status(404).json({ mensaje: "Libro no encontrado o no pertenece al usuario" });
