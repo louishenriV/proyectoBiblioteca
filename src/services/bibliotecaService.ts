@@ -67,7 +67,7 @@ type actualizarLibroData = {
 
 //actualizar un libro
 export const actualizarLibro = async (id:string, data: actualizarLibroData) => {
-    const dataActualizada: any = {};
+    const dataActualizada: Partial<actualizarLibroData> = {}; //creamos un objeto vacío para almacenar sólo los campos que se proporcionan en el objeto data, esto permite actualizaciones parciales sin sobrescribir campos no proporcionados
     if (data.titulo) dataActualizada.titulo = data.titulo; //sólo agregamos al objeto dataActualizada las propiedades que se proporcionan en el objeto data, esto permite actualizaciones parciales sin sobrescribir campos no proporcionados
     if (data.autor) dataActualizada.autor = data.autor;
     if (data.anioPublicacion) dataActualizada.anioPublicacion = data.anioPublicacion;
