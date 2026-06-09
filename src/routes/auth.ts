@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import { registrarUsuario, loginUsuario, eliminarUsuario} from "../services/authService.js";
+import { registrarUsuario, loginUsuario, eliminarUsuario, actualizarDatos} from "../services/authService.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -78,4 +78,15 @@ app.delete("/eliminar", authMiddleware, adminMiddleware, async (req, res) => {
     } catch (error) {
         res.status(500).json({ mensaje: "Error al eliminar usuario", error });
     }   
+})
+
+//actualizar nombre e email del usuario con PUT, ruta /auth/actualizar
+app.put("/actualizar", authMiddleware, async (req, res) => {
+    try {
+    const { id } = req.usuario!; //obtenemos el id del usuario autenticado desde el middleware
+     const datosActualizados = await actualizarDatos(id, req.body);
+     res.json({ mensaje: "Datos actualizados", usuario: datosActualizados });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al actualizar datos", error });
+    }
 })

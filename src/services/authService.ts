@@ -65,3 +65,30 @@ export const eliminarUsuario = async (email:string) => {
         throw error;
         }
 };
+
+
+
+//actualizar datos
+export const actualizarDatos = async (id: string, data: { nombre?: string, email?: string }) => {
+    const dataActualizada: Partial<{ nombre: string, email: string }> = {}; 
+    if (data.nombre) dataActualizada.nombre = data.nombre;
+    if (data.email) dataActualizada.email = data.email;
+    //Prisma con exactOptionalPropertyTypes no acepta undefined como valor para campos opciones, por lo que lo interpreta como "no proporcionado"
+    //Por eso construimos un objeto limpio que contiene los campos que realmente se proporcionan en el objeto data
+    
+    try {
+    const actualizarUsuario = await prisma.usuario.update({
+        where: { id },
+        data: dataActualizada,
+        select: {
+            id: true,
+            nombre: true,
+            email: true
+        }
+        })
+        return actualizarUsuario;
+        } catch (error) {
+            throw error;
+            }
+};
+
