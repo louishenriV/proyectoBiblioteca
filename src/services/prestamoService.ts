@@ -51,7 +51,8 @@ export const obtenerPrestamosActivos = async (usuarioId: string) => { //filtrar 
     return await prisma.prestamo.findMany({ //con findMany, podemos filtrar por fecha de devolución nula y por usuarioId
         where: { fechaDevolucion: null, usuarioId },
         include: {
-            usuario: { select: { id: true, nombre: true, email: true } } //nos aseguramos de no incluir el password del usuario en la respuesta, por seguridad
+            usuario: { select: { id: true, nombre: true, email: true } }, //nos aseguramos de no incluir el password del usuario en la respuesta, por seguridad
+            libro: true
         }
     });
 };
