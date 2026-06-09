@@ -19,9 +19,10 @@ app.post("/", async (req, res) => {
 
 app.put("/:id/devolver", async (req, res) => {
     const { id: prestamoId} = req.params;
+    const { id: usuarioId } = req.usuario!;
 
     try {
-        const prestamoDevuelto = await devolverLibro(prestamoId);
+        const prestamoDevuelto = await devolverLibro(prestamoId, usuarioId);
         res.json({ mensaje: "Libro devuelto", prestamo: prestamoDevuelto });
     } catch (error:any) {
         res.status(400).json({ error: "Error al devolver el libro: " + error.message });

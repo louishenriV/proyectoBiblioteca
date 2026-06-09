@@ -35,15 +35,24 @@ export const crearPrestamo = async (data: PrestamoData) => {
     }
 };
 
-export const devolverLibro = async (prestamoId: string) => {
+export const devolverLibro = async (prestamoId: string, usuarioId: string) => {
     try {
+        const prestamoExistente = await prisma.prestamo.findUnique({
+            where: { id: prestamoId }
+        });
+        if (!prestamoExistente) {
+            throw new Error("El préstamo no existe");
+        }
+        if (prestamoExistente.usuarioId !== usuarioId) {
+            throw new Error("No tienes permiso para devolver este libro");
+        }
         const prestamo = await prisma.prestamo.update({
-            where: { id: prestamoId },
+            where: { id: prestamoId, usuarioId }, // Aseguramos que el préstamo pertenece al usuario que lo está devolviendo
             data: { fechaDevolucion: new Date() }
         });
         return prestamo;
     } catch (error) {
-        throw new Error("Error al devolver el libro");
+        throw error;
     }
 }; 
 
