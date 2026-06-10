@@ -9,6 +9,29 @@ export default app;
 
 const saltRounds = 10; //definimos el número de rondas de sal para bcrypt, esto afecta la seguridad y el tiempo de procesamiento
 
+/**
+ * @openapi
+ * /auth/registro:
+ *   post:
+ *     summary: Registrar un nuevo usuario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Usuario registrado exitosamente
+ */
+
 //Crear usuario con POST, ruta /auth/registro
 app.post("/registro", async (req, res) => {
     const { nombre, email, password } = req.body;
@@ -44,6 +67,28 @@ app.post("/registro", async (req, res) => {
     }
 })
 
+
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     summary: Iniciar sesión de usuario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login exitoso, devuelve un token JWT
+ */
+
 //Login de usuario con POST, ruta /auth/login
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -65,6 +110,27 @@ app.post("/login", async (req, res) => {
         }
 })
 
+/**
+ * @openapi
+ * /auth/eliminar:
+ *   delete:
+ *     summary: Eliminar un usuario (solo admin)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado exitosamente
+ */
+
 //eliminar usuario con DELETE, ruta /auth/eliminar
 app.delete("/eliminar", authMiddleware, adminMiddleware, async (req, res) => {
     const { email } = req.body;
@@ -79,6 +145,29 @@ app.delete("/eliminar", authMiddleware, adminMiddleware, async (req, res) => {
         res.status(500).json({ mensaje: "Error al eliminar usuario", error });
     }   
 })
+
+/**
+ * @openapi
+ * /auth/actualizar:
+ *   put:
+ *     summary: Actualizar nombre y email de un usuario (solo el propio usuario o admin)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Datos actualizados exitosamente
+ */
 
 //actualizar nombre e email del usuario con PUT, ruta /auth/actualizar
 app.put("/actualizar", authMiddleware, async (req, res) => {

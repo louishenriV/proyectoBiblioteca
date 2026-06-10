@@ -4,10 +4,14 @@ import librosRoutes from "./routes/libros.js"
 import authRoutes from "./routes/auth.js"
 import prestamosRoutes from "./routes/prestamos.js"
 import { authMiddleware } from "./middlewares/auth.middleware.js";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./swagger.js";
 
 
 const app = express(); //creamos la app donde va a estar nuestro server 
 app.use(express.json()) //se trabaja con formato JSON en varios metodos de "BIblioteca"
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)) //ruta para la documentacion de la API, se accede con localhost:3000/docs
+
 app.use("/libros",authMiddleware, librosRoutes) /**conectamos las rutas de libros, ahora para acceder 
 a ellas es necesario usar localhost:3000/libros 
 y ademas se necesita el token de autenticacion**/
