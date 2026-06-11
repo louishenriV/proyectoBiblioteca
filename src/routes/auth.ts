@@ -46,7 +46,7 @@ app.post("/registro", async (req, res) => {
         return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar el formato del email
+    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,3}$/; // Expresión regular para validar el formato del email
     if (!emailRegex.test(email)) {
         res.status(400).json({ mensaje: "Formato de email inválido" });
         return;
