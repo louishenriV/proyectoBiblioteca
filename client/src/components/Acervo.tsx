@@ -8,6 +8,7 @@ type Libro = {
     editorial?: string;
     edicion?: string;
     isbn?: string;
+    prestamos: { id: string }[];
 } //defines la forma que tienen los datos que vas a recibir de la API. 
 
 function Acervo() {
@@ -46,7 +47,7 @@ function Acervo() {
                         <td>{libro.anioPublicacion}</td>
                         <td>{libro.editorial ?? "—"}</td>
                         <td>{libro.edicion ?? "—"}</td>
-                        <td>Disponible</td>
+                        <td>{libro.prestamos.length === 0 ? "Disponible" : "Prestado"}</td>
                     </tr>
                 ))}
             </tbody>
