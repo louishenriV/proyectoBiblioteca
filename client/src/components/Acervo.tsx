@@ -25,6 +25,11 @@ function Acervo() {
         .catch(err => console.error("Error:", err));
     }, []);
 
+    const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+    };  
+    
     return (
         <div>
             <h1>Acervo</h1>
@@ -52,6 +57,7 @@ function Acervo() {
                 ))}
             </tbody>
         </table>
+        <button onClick={handleLogout}>Cerrar sesión</button>
         </div>
     );
 }
