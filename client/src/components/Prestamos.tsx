@@ -23,6 +23,17 @@ function Prestamos() {
         .catch(err => console.error("Error:", err));
     }, []);
 
+    const handleDevolver = async (prestamoId: string) => {
+    const token = localStorage.getItem("token");
+    
+    await fetch(`/api/prestamos/${prestamoId}/devolver`, {
+        method: "PUT",
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+    
+    setPrestamos(prestamos.filter(p => p.id !== prestamoId));
+};    
+
     return (
         <div>
             <h1>Préstamos Activos</h1>
@@ -38,6 +49,8 @@ function Prestamos() {
                         <tr key={prestamo.id}>
                             <td>{prestamo.libro.titulo}</td>
                             <td>{new Date(prestamo.fechaPrestamo).toLocaleDateString()}</td>
+                            <th>Acción</th>
+                            <td><button onClick={() => handleDevolver(prestamo.id)}>Devolver</button></td>
                         </tr>
                     ))}
                 </tbody>
