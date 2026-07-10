@@ -59,6 +59,8 @@ function Acervo() {
         </table>
         <a href="/prestamos">Mis préstamos</a>
         <br />
+        <a href="/agregar-libro">Agregar Libro</a>
+        <br />
         <button onClick={handleLogout}>Cerrar sesión</button>
         </div>
     );
