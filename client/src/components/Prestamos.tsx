@@ -1,16 +1,16 @@
 import {useEffect, useState} from "react";
 
-type prestamoActivo = {
+type prestamoActivo = { //Define la forma de cada préstamo que viene de la API.
     id: string;
     fechaPrestamo: string;
     libro: {
         id: string;
-        titulo: string;
+        titulo: string; //libro es un objeto anidado.
     };
 }
 
 function Prestamos() {
-    const [prestamos, setPrestamos] = useState<prestamoActivo[]>([]);
+    const [prestamos, setPrestamos] = useState<prestamoActivo[]>([]); //Array vacío que se llenará con los préstamos activos del usuario.
     
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -42,6 +42,7 @@ function Prestamos() {
                     <tr>
                         <th>Título del libro</th>
                         <th>Fecha de préstamo</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,7 +50,6 @@ function Prestamos() {
                         <tr key={prestamo.id}>
                             <td>{prestamo.libro.titulo}</td>
                             <td>{new Date(prestamo.fechaPrestamo).toLocaleDateString()}</td>
-                            <th>Acción</th>
                             <td><button onClick={() => handleDevolver(prestamo.id)}>Devolver</button></td>
                         </tr>
                     ))}

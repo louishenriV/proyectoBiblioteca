@@ -1,14 +1,14 @@
 import { useState } from "react";
 
 function AgregarLibro() {
-    const [titulo, setTitulo] = useState("");
+    const [titulo, setTitulo] = useState(""); //Los estados comienzan vacíos o en cero. 
     const [autor, setAutor] = useState("");
-    const [anioPublicacion, setAnioPublicacion] = useState(0);
+    const [anioPublicacion, setAnioPublicacion] = useState(0); //comienza en cero porque es un número.
     const [editorial, setEditorial] = useState("");
     const [edicion, setEdicion] = useState("");
     const [isbn, setIsbn] = useState("");
     
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => { //es el evento de envío del formulario.
         e.preventDefault();
         const token = localStorage.getItem("token");
         
@@ -19,10 +19,10 @@ function AgregarLibro() {
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({ titulo, autor, anioPublicacion: Number(anioPublicacion), editorial, edicion, isbn })
-        });
+        }); //manda el libro al backend para que lo agregue a la base de datos. Se manda en formato JSON y se manda el token para que el backend sepa que es un usuario autorizado.
         
         if (response.ok) {
-            console.log("Libro agregado exitosamente");
+            console.log("Libro agregado exitosamente"); //limpia el formulario después de agregar el libro exitosamente. Esto es para que el usuario pueda agregar otro libro sin tener que borrar los campos manualmente.
             setTitulo("");
             setAutor("");
             setAnioPublicacion(0);
@@ -41,8 +41,8 @@ function AgregarLibro() {
                     type="text"
                     placeholder="Título"
                     value={titulo}
-                    onChange={(e) => setTitulo(e.target.value)}
-                /><br />
+                    onChange={(e) => setTitulo(e.target.value)} 
+                /><br /> 
                 <input
                     type="text"
                     placeholder="Autor"
@@ -72,10 +72,10 @@ function AgregarLibro() {
                     placeholder="ISBN"
                     value={isbn}
                     onChange={(e) => setIsbn(e.target.value)}
-                /><br />
+                /><br />                                        
                 <button type="submit">Agregar Libro</button>
             </form>
         </div>
-    );  
+    );  //cuando el usuario escriba algo en este input, toma el valor actual del input (e.target.value) y actualiza el estado con él
 }
 export default AgregarLibro;

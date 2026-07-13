@@ -1,4 +1,12 @@
 import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+
+
+type TokenPayload = {
+    id: string;
+    email: string;
+    rol: string;
+}
 
 type Libro = {
     id: string;
@@ -29,6 +37,9 @@ function Acervo() {
     localStorage.removeItem("token");
     window.location.href = "/login";
     };  
+
+    const token = localStorage.getItem("token");
+    const rol = token ? jwtDecode<TokenPayload>(token).rol : null;
     
     return (
         <div>
@@ -59,7 +70,7 @@ function Acervo() {
         </table>
         <a href="/prestamos">Mis préstamos</a>
         <br />
-        <a href="/agregar-libro">Agregar Libro</a>
+        {rol === "admin" && <a href="/agregar-libro">Agregar libro</a>}
         <br />
         <button onClick={handleLogout}>Cerrar sesión</button>
         </div>
