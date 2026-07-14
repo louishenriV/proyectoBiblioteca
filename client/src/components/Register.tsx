@@ -9,6 +9,7 @@ function Register() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState(""); //crea un estado para guardar lo que el usuario escribe en cada campo.
   const [password, setPassword] = useState("");
+  const [mensaje, setMensaje] = useState(""); //estado para manejar errores de inicio de sesión
 
     const handleSubmit = async (e: React.FormEvent) => { //aquí es donde vamos a conectar la API.
     e.preventDefault(); // evita que el formulario recargue la página al enviarse
@@ -22,13 +23,13 @@ function Register() {
         const data = await response.json();
         
         if (response.ok) {
-            console.log("Registro exitoso");
+            setMensaje("Registro exitoso");
             navigate("/login"); //redirige a la página de inicio de sesión después de registrarse
         } else {
-            console.log("Error:", data.mensaje);
-        }
+          setMensaje(data.mensaje || "Error al registrarse");
+      }
     } catch (error) {
-        console.log("Error de conexión:", error);
+        setMensaje("Error de conexión:");
     }
   };
   
@@ -56,6 +57,7 @@ function Register() {
         />
         <button type="submit">Registrarse</button>
       </form>
+      {mensaje && <p>{mensaje}</p>}
     </div>
   );
 }  

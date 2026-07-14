@@ -7,6 +7,7 @@ function AgregarLibro() {
     const [editorial, setEditorial] = useState("");
     const [edicion, setEdicion] = useState("");
     const [isbn, setIsbn] = useState("");
+    const [mensaje, setMensaje] = useState("");
     
     const handleSubmit = async (e: React.FormEvent) => { //es el evento de envío del formulario.
         e.preventDefault();
@@ -22,7 +23,7 @@ function AgregarLibro() {
         }); //manda el libro al backend para que lo agregue a la base de datos. Se manda en formato JSON y se manda el token para que el backend sepa que es un usuario autorizado.
         
         if (response.ok) {
-            console.log("Libro agregado exitosamente"); //limpia el formulario después de agregar el libro exitosamente. Esto es para que el usuario pueda agregar otro libro sin tener que borrar los campos manualmente.
+            setMensaje("Libro agregado exitosamente"); //limpia el formulario después de agregar el libro exitosamente. Esto es para que el usuario pueda agregar otro libro sin tener que borrar los campos manualmente.
             setTitulo("");
             setAutor("");
             setAnioPublicacion(0);
@@ -30,7 +31,7 @@ function AgregarLibro() {
             setEdicion("");
             setIsbn("");
         } else {
-            console.log("Error al agregar libro");
+            setMensaje("Error al agregar libro");
         }
     };
     return (
@@ -75,6 +76,7 @@ function AgregarLibro() {
                 /><br />                                        
                 <button type="submit">Agregar Libro</button>
             </form>
+            {mensaje && <p>{mensaje}</p>}
         </div>
     );  //cuando el usuario escriba algo en este input, toma el valor actual del input (e.target.value) y actualiza el estado con él
 }

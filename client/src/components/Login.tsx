@@ -10,6 +10,7 @@ function Login({ onLogin }: LoginProps) {
     const navigate = useNavigate(); //hook para redirigir a otra página después de iniciar sesión
   const [email, setEmail] = useState(""); //crea un estado para guardar lo que el usuario escribe en cada campo.
   const [password, setPassword] = useState("");
+  const [mensaje, setMensaje] = useState(""); //estado para manejar errores de inicio de sesión
 
   const handleSubmit = async (e: React.FormEvent) => { //aquí es donde vamos a conectar la API.
     e.preventDefault(); // evita que el formulario recargue la página al enviarse
@@ -24,14 +25,13 @@ function Login({ onLogin }: LoginProps) {
         
         if (response.ok) {
             localStorage.setItem("token", data.token);
-            console.log("Token guardado");
             onLogin(); // llama a la función onLogin para actualizar el estado del token en App
             navigate("/"); //redirige a la página principal después de iniciar sesión
         } else {
-            console.log("Error:", data.mensaje);
+            setMensaje(data.mensaje || "Error al iniciar sesión");
         }
     } catch (error) {
-        console.log("Error de conexión:", error);
+        setMensaje("Error de conexión:");
     }
   };
 
@@ -54,6 +54,7 @@ function Login({ onLogin }: LoginProps) {
         <button type="submit">Entrar</button>
         <p>¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
       </form>
+      {mensaje && <p>{mensaje}</p>}
     </div>
   );
 }
