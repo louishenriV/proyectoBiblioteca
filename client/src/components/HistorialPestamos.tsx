@@ -1,64 +1,54 @@
 import {useEffect, useState} from "react";
 
-type prestamoActivo = { //Define la forma de cada préstamo que viene de la API.
+type prestamoHistorial = { //Define la forma de cada préstamo que viene de la API.
     id: string;
     fechaPrestamo: string;
+    fechaDevolucion: string | null; //puede ser null si el libro aún no ha sido devuelto.
     libro: {
         id: string;
         titulo: string; //libro es un objeto anidado.
     };
 }
 
-function Prestamos() {
-    const [prestamos, setPrestamos] = useState<prestamoActivo[]>([]); //Array vacío que se llenará con los préstamos activos del usuario.
+function HistorialPrestamos() {
+    const [historial, setHistorial] = useState<prestamoHistorial[]>([]); //Array vacío que se llenará con los préstamos del historial del usuario.
     
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        fetch("/api/prestamos/activos", {
+        fetch("/api/prestamos/historial", {
             headers: { "Authorization": `Bearer ${token}` }
         })
         .then(res => res.json())
-        .then(data => setPrestamos(data.prestamos))
+        .then(data => {
+            setHistorial(data.prestamos);
+})
         .catch(err => console.error("Error:", err));
     }, []);
-
-    const handleDevolver = async (prestamoId: string) => {
-    const token = localStorage.getItem("token");
     
-    await fetch(`/api/prestamos/${prestamoId}/devolver`, {
-        method: "PUT",
-        headers: { "Authorization": `Bearer ${token}` }
-    });
-    
-    setPrestamos(prestamos.filter(p => p.id !== prestamoId));
-};    
-
     return (
         <div>
-            <h1>Préstamos Activos</h1>
+            <h1>Historial de Préstamos</h1>
             <table>
                 <thead>
                     <tr>
                         <th>Título del libro</th>
                         <th>Fecha de préstamo</th>
-                        <th>Acción</th>
+                        <th>Fecha de devolución</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {prestamos.map(prestamo => (
+                    {historial.map(prestamo => (
                         <tr key={prestamo.id}>
                             <td>{prestamo.libro.titulo}</td>
                             <td>{new Date(prestamo.fechaPrestamo).toLocaleDateString()}</td>
-                            <td><button onClick={() => handleDevolver(prestamo.id)}>Devolver</button></td>
+                            <td>{prestamo.fechaDevolucion ? new Date(prestamo.fechaDevolucion).toLocaleDateString() : "No devuelto"}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <a href="/prestamos/historial">Ver historial completo</a>
         </div>
     );
-
 }
 
-export default Prestamos;
+export default HistorialPrestamos;
