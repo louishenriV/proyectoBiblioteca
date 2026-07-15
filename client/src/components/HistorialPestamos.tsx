@@ -17,7 +17,7 @@ function HistorialPrestamos() {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        fetch(`${API_URL}/api/libros`,  {
+        fetch(`${API_URL}/libros`,  {
             headers: { "Authorization": `Bearer ${token}` }
         })
         .then(res => res.json())

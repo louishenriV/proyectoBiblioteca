@@ -16,7 +16,7 @@ function Prestamos() {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        fetch(`${API_URL}/api/prestamos/activos`, {
+        fetch(`${API_URL}/prestamos/activos`, {
             headers: { "Authorization": `Bearer ${token}` }
         })
         .then(res => res.json())

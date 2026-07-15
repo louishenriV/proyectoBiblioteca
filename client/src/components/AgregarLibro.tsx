@@ -14,7 +14,7 @@ function AgregarLibro() {
         e.preventDefault();
         const token = localStorage.getItem("token");
         
-        const response = await fetch(`${API_URL}/api/libros`, {
+        const response = await fetch(`${API_URL}/libros`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

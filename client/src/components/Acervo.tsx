@@ -25,7 +25,7 @@ function Acervo() {
     useEffect(() => { //es un hook que se ejecuta cuando el componente se monta por primera vez. 
         const token = localStorage.getItem("token");
 
-        fetch(`${API_URL}/api/libros`,  { //hace la petición GET al backend con el token en el header, igual que lo hacías en Thunder Client.
+        fetch(`${API_URL}/libros`,  { //hace la petición GET al backend con el token en el header, igual que lo hacías en Thunder Client.
             headers: { "Authorization": `Bearer ${token}` }
         })
         .then(res => res.json())

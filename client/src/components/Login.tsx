@@ -16,7 +16,7 @@ function Login({ onLogin }: LoginProps) {
   const handleSubmit = async (e: React.FormEvent) => { //aquí es donde vamos a conectar la API.
     e.preventDefault(); // evita que el formulario recargue la página al enviarse
     try {
-        const response = await fetch(`${API_URL}/api/auth/login`, {
+        const response = await fetch(`${API_URL}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
