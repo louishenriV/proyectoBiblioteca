@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "../api";
 
 function AgregarLibro() {
     const [titulo, setTitulo] = useState(""); //Los estados comienzan vacíos o en cero. 
@@ -13,7 +14,7 @@ function AgregarLibro() {
         e.preventDefault();
         const token = localStorage.getItem("token");
         
-        const response = await fetch("/api/libros", {
+        const response = await fetch(`${API_URL}/api/libros`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

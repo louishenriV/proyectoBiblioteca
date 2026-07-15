@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import { API_URL } from "../api";
 
 type prestamoHistorial = { //Define la forma de cada préstamo que viene de la API.
     id: string;
@@ -16,7 +17,7 @@ function HistorialPrestamos() {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        fetch("/api/prestamos/historial", {
+        fetch(`${API_URL}/api/libros`,  {
             headers: { "Authorization": `Bearer ${token}` }
         })
         .then(res => res.json())

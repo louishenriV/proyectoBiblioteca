@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../api";
 
 
 function Register() {
@@ -14,7 +15,7 @@ function Register() {
     const handleSubmit = async (e: React.FormEvent) => { //aquí es donde vamos a conectar la API.
     e.preventDefault(); // evita que el formulario recargue la página al enviarse
     try {
-        const response = await fetch("/api/auth/registro", {
+        const response = await fetch(`${API_URL}/api/auth/registro`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nombre, email, password })

@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import { API_URL } from "../api";
 
 type prestamoActivo = { //Define la forma de cada préstamo que viene de la API.
     id: string;
@@ -15,7 +16,7 @@ function Prestamos() {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        fetch("/api/prestamos/activos", {
+        fetch(`${API_URL}/api/prestamos/activos`, {
             headers: { "Authorization": `Bearer ${token}` }
         })
         .then(res => res.json())

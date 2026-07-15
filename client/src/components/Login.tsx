@@ -1,5 +1,6 @@
 import { useState } from "react"; //manejar datos que cambian, en este caso, lo que el usuario escribe en los campos de email y contraseña.
 import { useNavigate } from "react-router-dom"; //redirigir entre páginas después de iniciar sesión.
+import { API_URL } from "../api";
 
 
 type LoginProps = { //es como un parametro de una función normal, pero se le llama prop para componentes.
@@ -15,7 +16,7 @@ function Login({ onLogin }: LoginProps) {
   const handleSubmit = async (e: React.FormEvent) => { //aquí es donde vamos a conectar la API.
     e.preventDefault(); // evita que el formulario recargue la página al enviarse
     try {
-        const response = await fetch("/api/auth/login", {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })

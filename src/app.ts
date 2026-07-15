@@ -6,9 +6,14 @@ import prestamosRoutes from "./routes/prestamos.js"
 import { authMiddleware } from "./middlewares/auth.middleware.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
+import cors from "cors"; //Importa la libreria para manejar CORS
 
 
 const app = express(); //creamos la app donde va a estar nuestro server 
+app.use(cors({
+    origin: "https://proyecto-biblioteca-zeta.vercel.app",
+    credentials: true
+})); //Habilita CORS para todas las rutas
 app.use(express.json()) //se trabaja con formato JSON en varios metodos de "BIblioteca"
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)) //ruta para la documentacion de la API, se accede con localhost:3000/docs
 

@@ -4,7 +4,13 @@ import prisma from "../prismaClient.js";
 
 //Obtener todos los libros
 export const obtenerLibros = async () => {
-    return await prisma.libro.findMany() 
+    return await prisma.libro.findMany({
+        include: {
+            prestamos: {
+                where: {fechaDevolucion: null} //si fechaDevolucion es null, significa que el libro está prestado, si no es null, significa que el libro está disponible
+            }
+        }
+    }) 
   //conectarse a PostgreSQL, hacer la consulta, esperar la respuesta y traerla de vuelta
 };
 
