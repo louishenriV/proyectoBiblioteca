@@ -27,7 +27,7 @@ function Prestamos() {
     const handleDevolver = async (prestamoId: string) => {
     const token = localStorage.getItem("token");
     
-    await fetch(`/api/prestamos/${prestamoId}/devolver`, {
+    await fetch(`${API_URL}/prestamos/${prestamoId}/devolver`, {
         method: "PUT",
         headers: { "Authorization": `Bearer ${token}` }
     });
