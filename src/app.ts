@@ -11,8 +11,7 @@ import cors from "cors"; //Importa la libreria para manejar CORS
 
 const app = express(); //creamos la app donde va a estar nuestro server 
 app.use(cors({
-    origin: ["https://proyecto-biblioteca-zeta.vercel.app",
-             "https://proyecto-biblioteca-helybt2zs-quique-and-claude-and-me.vercel.app"],
+    origin: /\.vercel\.app$/,
     credentials: true
 })); //Habilita CORS para todas las rutas
 app.use(express.json()) //se trabaja con formato JSON en varios metodos de "BIblioteca"
