@@ -44,7 +44,7 @@ function Acervo() {
     const handlePrestamo = async (libroId: string) => {
         const token = localStorage.getItem("token");
         
-        const response =await fetch(`${API_URL}/prestamos/$`, {
+        const response =await fetch(`${API_URL}/prestamos/${libroId}`, {
             method: "POST",
             headers: { 
                         "Content-Type": "application/json",
