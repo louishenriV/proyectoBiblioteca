@@ -41,6 +41,25 @@ function Acervo() {
     const token = localStorage.getItem("token");
     const rol = token ? jwtDecode<TokenPayload>(token).rol : null;
     
+    const handlePrestamo = async (libroId: string) => {
+        const token = localStorage.getItem("token");
+        
+        const response =await fetch(`${API_URL}/prestamos/$`, {
+            method: "POST",
+            headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` 
+                    },
+            body: JSON.stringify({ libroId })
+        });
+
+        if (response.ok) {
+            setLibros(libros.map(libro => 
+                libro.id === libroId ? { ...libro, prestamos: [{id: "temp"}] } : libro
+            ));
+        }
+    };
+
     return (
         <div>
             <h1>Acervo</h1>
@@ -53,6 +72,7 @@ function Acervo() {
                     <th>Editorial</th>
                     <th>Edición</th>
                     <th>Disponibilidad</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,6 +84,9 @@ function Acervo() {
                         <td>{libro.editorial ?? "—"}</td>
                         <td>{libro.edicion ?? "—"}</td>
                         <td>{libro.prestamos.length === 0 ? "Disponible" : "Prestado"}</td>
+                        <td>
+                            <button onClick={() => handlePrestamo(libro.id)}>Pedir prestado</button>
+                        </td>
                     </tr>
                 ))}
             </tbody>
