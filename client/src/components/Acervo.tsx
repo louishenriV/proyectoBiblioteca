@@ -86,9 +86,9 @@ function Acervo() {
                         <td>{libro.anioPublicacion}</td>
                         <td>{libro.editorial ?? "—"}</td>
                         <td>{libro.edicion ?? "—"}</td>
-                        <td>{libro.prestamos.length === 0 ? "Disponible" : "Prestado"}</td>
-                        <td>
+                        <td>{libro.prestamos.length === 0 && (
                             <button onClick={() => handlePrestamo(libro.id)}>Pedir prestado</button>
+                         )}
                         </td>
                     </tr>
                 ))}
