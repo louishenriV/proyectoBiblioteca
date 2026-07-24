@@ -21,17 +21,28 @@ type Libro = {
 
 function Acervo() {
     const [libros, setLibros] = useState<Libro[]>([]); //creas un estado que empieza como un array vacío.
+    const [busqueda, setBusqueda] = useState<string>(""); //creas un estado para la búsqueda que empieza como un string vacío.
 
-    useEffect(() => { //es un hook que se ejecuta cuando el componente se monta por primera vez. 
-        const token = localStorage.getItem("token");
+    useEffect(() => {
+    const delay = setTimeout(() => {
+        if (busqueda.trim() === "") {
+            // si está vacío, carga todos los libros
+            fetch(`${API_URL}/libros`, {
+                headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+            })
+            .then(res => res.json())
+            .then(data => setLibros(data));
+        } else {
+            fetch(`${API_URL}/libros/buscar?q=${busqueda}`, {
+                headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+            })
+            .then(res => res.json())
+            .then(data => setLibros(data));
+        }
+    }, 400); // espera 400ms después de que el usuario deje de escribir
 
-        fetch(`${API_URL}/libros`,  { //hace la petición GET al backend con el token en el header, igual que lo hacías en Thunder Client.
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(data => setLibros(data))
-        .catch(err => console.error("Error:", err));
-    }, []);
+    return () => clearTimeout(delay); // cancela el timer si el usuario sigue escribiendo
+}, [busqueda]);
 
     const handleLogout = () => {
     localStorage.removeItem("token");
@@ -66,6 +77,12 @@ function Acervo() {
     return (
         <div>
             <h1>Acervo</h1>
+            <input
+                type="text"
+                placeholder="Buscar por título o autor..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                />
              <table>
             <thead>
                 <tr>
