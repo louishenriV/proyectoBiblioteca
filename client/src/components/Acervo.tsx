@@ -23,7 +23,7 @@ function Acervo() {
     const [libros, setLibros] = useState<Libro[]>([]); //creas un estado que empieza como un array vacío.
     const [busqueda, setBusqueda] = useState<string>(""); //creas un estado para la búsqueda que empieza como un string vacío.
 
-    useEffect(() => {
+    useEffect(() => { //Se ejecuta cada vez que el valor de busqueda cambia, esto manda una petición al backend después de un pequeño retraso.
     const delay = setTimeout(() => {
         if (busqueda.trim() === "") {
             // si está vacío, carga todos los libros
@@ -42,7 +42,7 @@ function Acervo() {
     }, 400); // espera 400ms después de que el usuario deje de escribir
 
     return () => clearTimeout(delay); // cancela el timer si el usuario sigue escribiendo
-}, [busqueda]);
+}, [busqueda]); // el efecto se ejecuta cada vez que busqueda cambia
 
     const handleLogout = () => {
     localStorage.removeItem("token");
