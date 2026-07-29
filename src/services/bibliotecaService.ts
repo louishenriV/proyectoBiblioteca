@@ -2,16 +2,20 @@ import prisma from "../prismaClient.js";
 //importamos la instancia de Prisma Client para interactuar con la base de datos
 
 
+//Include compartido: cualquier endpoint que devuelva libros al frontend debe usar
+//este mismo include, asi la forma del dato "Libro" nunca se desincroniza entre funciones
+//(el frontend siempre espera libro.prestamos, aunque sea un arreglo vacio)
+const INCLUDE_PRESTAMOS_ACTIVOS = {
+    prestamos: {
+        where: { fechaDevolucion: null } //si fechaDevolucion es null, significa que el libro está prestado, si no es null, significa que el libro está disponible
+    }
+};
+
 //Obtener todos los libros
 export const obtenerLibros = async () => {
     return await prisma.libro.findMany({
-        include: {
-            prestamos: {
-                where: {fechaDevolucion: null} //si fechaDevolucion es null, significa que el libro está prestado, si no es null, significa que el libro está disponible
-            }
-        }
+        include: INCLUDE_PRESTAMOS_ACTIVOS
     }) 
-  //conectarse a PostgreSQL, hacer la consulta, esperar la respuesta y traerla de vuelta
 };
 
 //definir LibroData para tipar los datos que se reciben al agregar un libro
@@ -99,7 +103,8 @@ export const buscarLibros = async (query: string) => {
                 { titulo: { contains: query, mode: "insensitive" } }, //verifica si la consulta está contenida en el título, autor o año de publicación, sin importar mayúsculas o minúsculas
                 { autor: { contains: query, mode: "insensitive" } }
             ]
-        }
+        },
+            include: INCLUDE_PRESTAMOS_ACTIVOS
     });
 }
                 
