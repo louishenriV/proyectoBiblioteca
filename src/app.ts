@@ -10,8 +10,18 @@ import cors from "cors"; //Importa la libreria para manejar CORS
 
 
 const app = express(); //creamos la app donde va a estar nuestro server 
+
+//Lista de origenes permitidos: el regex de produccion (Vercel) siempre esta,
+//y el origen de desarrollo local se agrega solo si esta definido en el .env,
+//asi el codigo que se sube a produccion nunca tiene un localhost harcodeado
+const allowedOrigins: (string | RegExp)[] = [/\.vercel\.app$/];
+
+if (process.env.CORS_ORIGIN_DEV) {
+    allowedOrigins.push(process.env.CORS_ORIGIN_DEV);
+}
+
 app.use(cors({
-    origin: /\.vercel\.app$/,
+    origin: allowedOrigins,
     credentials: true
 })); //Habilita CORS para todas las rutas
 app.use(express.json()) //se trabaja con formato JSON en varios metodos de "BIblioteca"
