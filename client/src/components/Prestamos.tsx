@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { API_URL } from "../api";
+import { authFetch } from "../api";
 
 type prestamoActivo = { //Define la forma de cada préstamo que viene de la API.
     id: string;
@@ -14,23 +14,16 @@ function Prestamos() {
     const [prestamos, setPrestamos] = useState<prestamoActivo[]>([]); //Array vacío que se llenará con los préstamos activos del usuario.
     
     useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        fetch(`${API_URL}/prestamos/activos`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(data => setPrestamos(data.prestamos))
-        .catch(err => console.error("Error:", err));
-    }, []);
+    authFetch("/prestamos/activos")
+    .then(res => res.json())
+    .then(data => setPrestamos(data.prestamos))
+    .catch(err => console.error("Error:", err));
+}, []);
 
     const handleDevolver = async (prestamoId: string) => {
-    const token = localStorage.getItem("token");
-    
-    await fetch(`${API_URL}/prestamos/${prestamoId}/devolver`, {
-        method: "PUT",
-        headers: { "Authorization": `Bearer ${token}` }
-    });
+        await authFetch(`/prestamos/${prestamoId}/devolver`, {
+            method: "PUT"
+        });
     
     setPrestamos(prestamos.filter(p => p.id !== prestamoId));
 };    
