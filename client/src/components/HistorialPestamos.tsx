@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { API_URL } from "../api";
+import { authFetch } from "../api";
 
 type prestamoHistorial = { //Define la forma de cada préstamo que viene de la API.
     id: string;
@@ -15,17 +15,13 @@ function HistorialPrestamos() {
     const [historial, setHistorial] = useState<prestamoHistorial[]>([]); //Array vacío que se llenará con los préstamos del historial del usuario.
     
     useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        fetch(`${API_URL}/prestamos/historial`,  {
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(data => {
-            setHistorial(data.prestamos);
-})
-        .catch(err => console.error("Error:", err));
-    }, []);
+    authFetch("/prestamos/historial")
+    .then(res => res.json())
+    .then(data => {
+        setHistorial(data.prestamos);
+    })
+    .catch(err => console.error("Error:", err));
+}, []);
     
     return (
         <div>
