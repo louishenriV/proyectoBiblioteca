@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { API_URL } from "../api";
+import { authFetch } from "../api";
 
 function AgregarLibro() {
     const [titulo, setTitulo] = useState(""); //Los estados comienzan vacíos o en cero. 
@@ -10,31 +10,29 @@ function AgregarLibro() {
     const [isbn, setIsbn] = useState("");
     const [mensaje, setMensaje] = useState("");
     
-    const handleSubmit = async (e: React.FormEvent) => { //es el evento de envío del formulario.
-        e.preventDefault();
-        const token = localStorage.getItem("token");
-        
-        const response = await fetch(`${API_URL}/libros`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ titulo, autor, anioPublicacion: Number(anioPublicacion), editorial, edicion, isbn })
-        }); //manda el libro al backend para que lo agregue a la base de datos. Se manda en formato JSON y se manda el token para que el backend sepa que es un usuario autorizado.
-        
-        if (response.ok) {
-            setMensaje("Libro agregado exitosamente"); //limpia el formulario después de agregar el libro exitosamente. Esto es para que el usuario pueda agregar otro libro sin tener que borrar los campos manualmente.
-            setTitulo("");
-            setAutor("");
-            setAnioPublicacion(0);
-            setEditorial("");
-            setEdicion("");
-            setIsbn("");
-        } else {
-            setMensaje("Error al agregar libro");
-        }
-    };
+    const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const response = await authFetch("/libros", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titulo, autor, anioPublicacion: Number(anioPublicacion), editorial, edicion, isbn })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        setMensaje("Libro agregado exitosamente");
+        setTitulo("");
+        setAutor("");
+        setAnioPublicacion(0);
+        setEditorial("");
+        setEdicion("");
+        setIsbn("");
+    } else {
+        setMensaje(data.mensaje || "Error al agregar libro");
+    }
+};
     return (
         <div>
             <h2>Agregar Libro</h2>
