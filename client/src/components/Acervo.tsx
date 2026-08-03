@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { API_URL } from "../api";
+import { authFetch } from "../api";
 
 type TokenPayload = {
     id: string;
@@ -22,20 +22,17 @@ type Libro = {
 function Acervo() {
     const [libros, setLibros] = useState<Libro[]>([]); //creas un estado que empieza como un array vacío.
     const [busqueda, setBusqueda] = useState<string>(""); //creas un estado para la búsqueda que empieza como un string vacío.
+    const [mensaje, setMensaje] = useState<string>("");
 
     useEffect(() => { //Se ejecuta cada vez que el valor de busqueda cambia, esto manda una petición al backend después de un pequeño retraso.
     const delay = setTimeout(() => {
         if (busqueda.trim() === "") {
             // si está vacío, carga todos los libros
-            fetch(`${API_URL}/libros`, {
-                headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-            })
+            authFetch("/libros")
             .then(res => res.json())
             .then(data => setLibros(data));
         } else {
-            fetch(`${API_URL}/libros/buscar?q=${busqueda}`, {
-                headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-            })
+            authFetch(`/libros/buscar?q=${busqueda}`)
             .then(res => res.json())
             .then(data => setLibros(data));
         }
@@ -53,27 +50,24 @@ function Acervo() {
     const rol = token ? jwtDecode<TokenPayload>(token).rol : null;
     
     const handlePrestamo = async (libroId: string) => {
-        const token = localStorage.getItem("token");
-        console.log("Token:", token);
-        console.log("LibroId:", libroId);
-        console.log("URL:", `${API_URL}/prestamos`);
-        
-        const response =await fetch(`${API_URL}/prestamos/`, {
-            method: "POST",
-            headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}` 
-                    },
-            body: JSON.stringify({ libroId })
-        });
+    setMensaje("");
 
-        if (response.ok) {
-            setLibros(libros.map(libro => 
-                libro.id === libroId ? { ...libro, prestamos: [{id: "temp"}] } : libro
-            ));
-        }
-    };
+    const response = await authFetch(`/prestamos/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ libroId })
+    });
 
+    const data = await response.json();
+
+    if (response.ok) {
+        setLibros(libros.map(libro => 
+            libro.id === libroId ? { ...libro, prestamos: [{id: "temp"}] } : libro
+        ));
+    } else {
+        setMensaje(data.error || "No se pudo pedir prestado el libro");
+    }
+};
     return (
         <div>
             <h1>Acervo</h1>
@@ -83,6 +77,7 @@ function Acervo() {
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 />
+                {mensaje && <p style={{ color: "red" }}>{mensaje}</p>}
              <table>
             <thead>
                 <tr>
