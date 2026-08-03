@@ -66,8 +66,8 @@ app.post("/", adminMiddleware, async (req, res) => {
     const { titulo, autor, anioPublicacion, editorial, edicion, isbn } = req.body;
 
     if ( // Validamos que cada campo exista y sea del tipo correcto
-        typeof titulo !== "string" ||
-        typeof autor !== "string" ||
+        typeof titulo !== "string" || titulo.trim() === "" ||
+        typeof autor !== "string" || autor.trim() === "" ||
         typeof anioPublicacion !== "number"
     ) {// Si alguno falla, respondemos 400 (Bad Request) y cortamos la ejecución
         res.status(400).json({ mensaje: "Datos inválidos o incompletos" }); 
