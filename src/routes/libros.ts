@@ -2,6 +2,7 @@ import { Router } from "express"
 import { obtenerLibros, agregarLibro, eliminarLibro, verLibro, actualizarLibro, buscarLibros } from "../services/bibliotecaService.js";
 import { checarDisponibilidad } from "../services/prestamoService.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
+import { validarDatosLibro } from "../validators/libroValidator.js";
 
 const app = Router()
 
@@ -64,14 +65,10 @@ necesario volverlo a poner en la ruta porque si no sería como pedir la ruta lib
 app.post("/", adminMiddleware, async (req, res) => {
     // Extraemos los datos del body para validarlos antes de pasarlos al servicio
     const { titulo, autor, anioPublicacion, editorial, edicion, isbn } = req.body;
-
-    if ( // Validamos que cada campo exista y sea del tipo correcto
-        typeof titulo !== "string" || titulo.trim() === "" ||
-        typeof autor !== "string" || autor.trim() === "" ||
-        typeof anioPublicacion !== "number"
-    ) {// Si alguno falla, respondemos 400 (Bad Request) y cortamos la ejecución
-        res.status(400).json({ mensaje: "Datos inválidos o incompletos" }); 
-        return; // evita que Express siga ejecutando código después de haber respondido
+    const validacion = validarDatosLibro({ titulo, autor, anioPublicacion });
+    if (!validacion.valido) {
+        res.status(400).json({ mensaje: validacion.mensaje });
+        return;
     }
     try{
     //creamos un nuevo objeto Libro
