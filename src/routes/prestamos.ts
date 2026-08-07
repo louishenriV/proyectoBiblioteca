@@ -29,12 +29,8 @@ app.post("/", async (req, res) => {
     const { id:usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
     const { libroId } = req.body;  
 
-    try {
-        const nuevoPrestamo = await crearPrestamo({ libroId, usuarioId });
-        res.status(201).json({ mensaje: "Préstamo creado", prestamo: nuevoPrestamo });
-    } catch (error:any) {
-        res.status(400).json({ error: "Error al crear el préstamo: " + error.message });
-    }
+    const nuevoPrestamo = await crearPrestamo({ libroId, usuarioId });
+    res.status(201).json({ mensaje: "Préstamo creado", prestamo: nuevoPrestamo });
 });
 
 /**
@@ -61,12 +57,8 @@ app.put("/:id/devolver", async (req, res) => {
     const { id: prestamoId} = req.params;
     const { id: usuarioId } = req.usuario!;
 
-    try {
-        const prestamoDevuelto = await devolverLibro(prestamoId, usuarioId);
-        res.json({ mensaje: "Libro devuelto", prestamo: prestamoDevuelto });
-    } catch (error:any) {
-        res.status(400).json({ error: "Error al devolver el libro: " + error.message });
-    }
+    const prestamoDevuelto = await devolverLibro(prestamoId, usuarioId);
+    res.json({ mensaje: "Libro devuelto", prestamo: prestamoDevuelto });
 });
 
 /**
@@ -85,12 +77,8 @@ app.put("/:id/devolver", async (req, res) => {
 app.get("/activos", async (req, res) => {
     const { id: usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
 
-    try {
-        const prestamosActivos = await obtenerPrestamosActivos(usuarioId);
-        res.json({ prestamos: prestamosActivos });
-    } catch (error:any) {
-        res.status(400).json({ error: "Error al obtener préstamos activos: " + error.message });
-    }
+    const prestamosActivos = await obtenerPrestamosActivos(usuarioId);
+    res.json({ prestamos: prestamosActivos });
 });
 
 /**
@@ -108,12 +96,8 @@ app.get("/activos", async (req, res) => {
 app.get("/historial", async (req, res) => {
     const { id: usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
 
-    try {
-        const historialPrestamos = await obtenerHistorialPrestamos(usuarioId);
-        res.json({ prestamos: historialPrestamos });
-    } catch (error:any) {
-        res.status(400).json({ error: "Error al obtener historial de préstamos: " + error.message });
-    }
+    const historialPrestamos = await obtenerHistorialPrestamos(usuarioId);
+    res.json({ prestamos: historialPrestamos });
 });
 
 export default app;

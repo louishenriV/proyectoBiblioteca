@@ -1,3 +1,4 @@
+import { AppError } from "../errors/AppError.js";
 import prisma from "../prismaClient.js";
 
 //definir PrestamoData para tipar los datos que se reciben al crear un préstamo
@@ -7,53 +8,49 @@ type PrestamoData = {
 };
 
 //crear prestamo
+//crear prestamo
 export const crearPrestamo = async (data: PrestamoData) => {
     const { libroId, usuarioId } = data;
-    try {
+
     const existeLibro = await prisma.libro.findUnique({ where: { id: libroId } });
     if (!existeLibro) {
-        throw new Error("El libro no existe");
-    };  
+        throw new AppError("El libro no existe", 404);
+    }
+
     const prestamoActivo = await prisma.prestamo.findFirst({
         where: { libroId, fechaDevolucion: null }
     });
 
     if (prestamoActivo) {
-        throw new Error("El libro ya está prestado");
+        throw new AppError("El libro ya está prestado", 409);
     }
-  
+
     const nuevoPrestamo = await prisma.prestamo.create({
         data: {
             libroId,
-            usuarioId, 
+            usuarioId,
             fechaPrestamo: new Date()
-        }  
-    })
+        }
+    });
+
     return nuevoPrestamo;
-    } catch (error) {
-        throw new Error("El libro no existe");
-    }
 };
 
 export const devolverLibro = async (prestamoId: string, usuarioId: string) => {
-    try {
         const prestamoExistente = await prisma.prestamo.findUnique({
             where: { id: prestamoId }
         });
         if (!prestamoExistente) {
-            throw new Error("El préstamo no existe");
+            throw new AppError("El préstamo no existe", 404);
         }
         if (prestamoExistente.usuarioId !== usuarioId) {
-            throw new Error("No tienes permiso para devolver este libro");
+            throw new AppError("No tienes permiso para devolver este libro", 403);
         }
         const prestamo = await prisma.prestamo.update({
             where: { id: prestamoId, usuarioId }, // Aseguramos que el préstamo pertenece al usuario que lo está devolviendo
             data: { fechaDevolucion: new Date() }
         });
         return prestamo;
-    } catch (error) {
-        throw error;
-    }
 }; 
 
 export const obtenerPrestamosActivos = async (usuarioId: string) => { //filtrar prestamos activos por usuario, si no, devuelve todos los prestamos activos de todos los usuarios, lo cual no es lo ideal
@@ -77,12 +74,9 @@ export const obtenerHistorialPrestamos = async (usuarioId: string) => {
 };
 
 export const checarDisponibilidad = async (libroId: string) => {
-    try {
     const prestamoActivo = await prisma.prestamo.findFirst({
         where: { libroId, fechaDevolucion: null }
     });
     return !prestamoActivo; // !prestamoActivo = false. Si no hay un préstamo activo, el libro está disponible
-} catch (error) {
-    throw new Error("Error al verificar disponibilidad del libro");
-}
+
 };
