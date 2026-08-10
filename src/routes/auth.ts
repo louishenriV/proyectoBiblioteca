@@ -52,19 +52,9 @@ app.post("/registro", async (req, res) => {
         return;
     }
 
-
-    try{
-    const hash = await bcrypt.hash(password, saltRounds); //hasheamos la contraseña antes de guardarla en la base de datos
+    const hash = await bcrypt.hash(password, saltRounds);
     const nuevoUsuario = await registrarUsuario({nombre, email, password: hash});
     res.status(201).json({ mensaje: "Usuario registrado", usuario: nuevoUsuario });
-    }     catch (error: any) {
-            console.log("Error en login:", error);
-            if (error.code === "P2002") {
-                res.status(409).json({ mensaje: "El email ya está registrado" });
-                return;
-            }
-            res.status(500).json({ mensaje: "Error al registrar usuario", error });
-    }
 })
 
 
@@ -97,17 +87,12 @@ app.post("/login", async (req, res) => {
         res.status(400).json({ mensaje: "Datos inválidos o incompletos" });
         return;
     }
-        try {
-            const token = await loginUsuario(email, password);
-            if (!token) {
-                res.status(401).json({ mensaje: "Credenciales incorrectas" });
-                return;
-            }
-            res.json({ mensaje: "Login exitoso", token });
-        }
-        catch (error) {
-            res.status(500).json({ mensaje: "Error al iniciar sesión", error });
-        }
+    const token = await loginUsuario(email, password);
+    if (!token) {
+        res.status(401).json({ mensaje: "Credenciales incorrectas" });
+        return;
+    }
+    res.json({ mensaje: "Login exitoso", token });
 })
 
 /**
@@ -138,12 +123,8 @@ app.delete("/eliminar", authMiddleware, adminMiddleware, async (req, res) => {
         res.status(400).json({ mensaje: "Datos inválidos o incompletos" });
         return;
     }
-    try {
-        await eliminarUsuario(email);
-        res.json({ mensaje: "Usuario eliminado" });
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al eliminar usuario", error });
-    }   
+    await eliminarUsuario(email);
+    res.json({ mensaje: "Usuario eliminado" });
 })
 
 /**
@@ -171,11 +152,7 @@ app.delete("/eliminar", authMiddleware, adminMiddleware, async (req, res) => {
 
 //actualizar nombre e email del usuario con PUT, ruta /auth/actualizar
 app.put("/actualizar", authMiddleware, async (req, res) => {
-    try {
     const { id } = req.usuario!; //obtenemos el id del usuario autenticado desde el middleware
-     const datosActualizados = await actualizarDatos(id, req.body);
-     res.json({ mensaje: "Datos actualizados", usuario: datosActualizados });
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al actualizar datos", error });
-    }
+    const datosActualizados = await actualizarDatos(id, req.body);
+    res.json({ mensaje: "Datos actualizados", usuario: datosActualizados });
 })
