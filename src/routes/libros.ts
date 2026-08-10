@@ -20,11 +20,7 @@ const app = Router()
 
 //obtener todos los libros, ruta /libros 
 app.get("/", async(req,res) => { //Endpoint tipico de API
-    try{
     res.json(await obtenerLibros())
-    } catch (error){
-       res.status(500).json({mensaje:"Error al obtener libros", error})  
-    }
 })
 /*Recuerda que ya estamos agregando libros desde el app.use... aqui ya no es 
 necesario volverlo a poner en la ruta porque si no sería como pedir la ruta libros/libros */
@@ -65,19 +61,15 @@ necesario volverlo a poner en la ruta porque si no sería como pedir la ruta lib
 app.post("/", adminMiddleware, async (req, res) => {
     // Extraemos los datos del body para validarlos antes de pasarlos al servicio
     const { titulo, autor, anioPublicacion, editorial, edicion, isbn } = req.body;
+ 
     const validacion = validarDatosLibro({ titulo, autor, anioPublicacion });
     if (!validacion.valido) {
         res.status(400).json({ mensaje: validacion.mensaje });
         return;
     }
-    try{
     //creamos un nuevo objeto Libro
     const nuevoLibro = await agregarLibro({titulo, autor, anioPublicacion, editorial, edicion, isbn}) //pasamos el id del usuario al servicio para asociar el libro con el usuario que lo creó   ;
     res.json({mensaje:"Libro agregado", libro: nuevoLibro}) //respuesta   
-    } catch (error){
-        res.status(500).json({mensaje:"Error al agregar libro", error}) //es importante devolver error 500
-    }//si no lo especificamos, devuelve por default 200 y eso es engañoso si se supone es un error
-
 }) 
 
 /**
@@ -105,12 +97,8 @@ app.get("/buscar", async (req, res) => {
         res.status(400).json({ mensaje: "Debes proporcionar un término de búsqueda" });
         return;
     }
-    try {
-        const resultados = await buscarLibros(q);
-        res.json(resultados);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al buscar libros", error });
-    }
+    const resultados = await buscarLibros(q);
+    res.json(resultados);
 });
 
 /**
@@ -134,13 +122,9 @@ app.get("/buscar", async (req, res) => {
 //checar disponibilidad de un libro con GET, ruta /libros/:id/disponibilidad
 app.get("/:id/disponibilidad", async (req, res) => {
     const { id: libroId } = req.params;
-
-    try {
-        const disponible = await checarDisponibilidad(libroId);
-        res.json({ libroId, disponible });
-    } catch (error:any) {
-        res.status(400).json({ error: "Error al checar disponibilidad: " + error.message });
-    }
+ 
+    const disponible = await checarDisponibilidad(libroId);
+    res.json({ libroId, disponible });
 }); 
 
 /**
@@ -167,17 +151,9 @@ app.get("/:id/disponibilidad", async (req, res) => {
 
 //Eliminar un libro con DELETE
 app.delete("/:id", adminMiddleware, async (req, res) => {
-    try{
     const id = String(req.params["id"]) //obtenemos el id del libro a eliminar de los parametros de la ruta;
     await eliminarLibro(id) //pasamos el id del usuario al servicio para que solo pueda eliminar libros asociados a ese usuario;
     res.status(204).json({mensaje : "Libro eliminado"})
-    } catch (error: any){
-        if (error.code === "P2025") {
-        res.status(404).json({ mensaje: "Libro no encontrado o no pertenece al usuario" });
-        return;
-    }
-        res.status(500).json({mensaje: "No se pudo borrar el libro, ID no encontrado"})
-    }
 })
 
 /**
@@ -203,17 +179,9 @@ app.delete("/:id", adminMiddleware, async (req, res) => {
 
 //ver un libro por su ID con GET, ruta /libros/:id
 app.get("/:id", async (req, res) => {
-    try{
-        const { id } = req.params;
-        const libro = await verLibro(id);
-        if (!libro) {
-            res.status(404).json({ mensaje: "Libro no encontrado" });
-            return;
-        }
-        res.json(libro);
-    } catch (error: any) {
-        res.status(404).json({ mensaje: "Libro no encontrado" });
-    }
+    const { id } = req.params;
+    const libro = await verLibro(id);
+    res.json(libro);
 });
 
 /**
@@ -230,9 +198,31 @@ app.get("/:id", async (req, res) => {
  *         required: true
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             description: Solo incluye los campos que quieras actualizar
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               autor:
+ *                 type: string
+ *               anioPublicacion:
+ *                 type: number
+ *               editorial:
+ *                 type: string
+ *               edicion:
+ *                 type: string
+ *               isbn:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Libro actualizado exitosamente
+ *       400:
+ *         description: No se proporcionaron datos para actualizar
  *       404:
  *         description: Libro no encontrado
  */
@@ -241,12 +231,15 @@ app.put("/:id", adminMiddleware, async (req, res) => {
     const id = req.params["id"] as string;
     const data = req.body;
 
-    try {
-        const libroActualizado = await actualizarLibro(id, data);
-        res.json({ mensaje: "Libro actualizado", libro: libroActualizado });
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al actualizar el libro", error });
+    // Si el body vino vacio o no vino en absoluto (undefined), req.body es {} gracias a express.json(),
+    // pero por si acaso llega undefined tambien lo cubrimos aqui.
+    if (!data || Object.keys(data).length === 0) {
+        res.status(400).json({ mensaje: "No se proporcionaron datos para actualizar" });
+        return;
     }
+
+    const libroActualizado = await actualizarLibro(id, data);
+    res.json({ mensaje: "Libro actualizado", libro: libroActualizado });
 });
 
 

@@ -1,4 +1,6 @@
 import prisma from "../prismaClient.js";
+import { Prisma } from "../generated/prisma/client.js";
+import { AppError } from "../errors/AppError.js";
 //importamos la instancia de Prisma Client para interactuar con la base de datos
 
 
@@ -49,20 +51,30 @@ export const agregarLibro = async (data: LibroData) => { //recibe datos desde la
 
 //eliminar un libro
 export const eliminarLibro = async (id:string) => {
-    await prisma.libro.delete({
-        where: { id }
-    })
+    try {
+        await prisma.libro.delete({
+            where: { id }
+        });
+    } catch (error) {
+        // P2025: codigo especifico de Prisma para "el registro que querias
+        // borrar/actualizar no existe". Lo distinguimos de cualquier otro
+        // error inesperado (conexion caida, etc.) para no disfrazar ese
+        // segundo caso como un simple 404.
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+            throw new AppError("Libro no encontrado o no pertenece al usuario", 404);
+        }
+        throw error; // error inesperado: sube tal cual hasta el middleware central (500)
+    }
 };
 
-
 export const verLibro = async (id:string) => {
-    try {
-    return await prisma.libro.findUnique({ //buscar un libro por su ID
+    const libro = await prisma.libro.findUnique({ //buscar un libro por su ID
         where: { id }
-    }) 
-    } catch (error) {
-        throw new Error("No se pudo encontrar el libro");
+    });
+    if (!libro) {
+        throw new AppError("Libro no encontrado", 404);
     }
+    return libro;
 }
 
 
@@ -91,7 +103,10 @@ export const actualizarLibro = async (id:string, data: actualizarLibroData) => {
         });
         return libroActualizado;
     } catch (error) {
-        throw new Error("No se pudo actualizar el libro");
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+            throw new AppError("Libro no encontrado", 404);
+        }
+        throw error;
     }
 };
 
