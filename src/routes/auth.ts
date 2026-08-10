@@ -54,7 +54,7 @@ app.post("/registro", async (req, res) => {
 
 
     try{
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, saltRounds); //hasheamos la contraseña antes de guardarla en la base de datos
     const nuevoUsuario = await registrarUsuario({nombre, email, password: hash});
     res.status(201).json({ mensaje: "Usuario registrado", usuario: nuevoUsuario });
     }     catch (error: any) {
