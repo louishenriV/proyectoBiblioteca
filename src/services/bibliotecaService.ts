@@ -13,11 +13,22 @@ const INCLUDE_PRESTAMOS_ACTIVOS = {
     }
 };
 
-//Obtener todos los libros
-export const obtenerLibros = async () => {
-    return await prisma.libro.findMany({
-        include: INCLUDE_PRESTAMOS_ACTIVOS
-    }) 
+//Obtener todos los libros, paginados
+export const obtenerLibros = async (pagina: number, limite: number) => {
+    const skip = (pagina - 1) * limite; // cuantos registros saltarse para llegar a la pagina pedida
+
+    // Promise.all: pedimos los libros de esta pagina Y el total de libros en la
+    // misma tanda, en paralelo, en vez de esperar una consulta y luego la otra
+    const [libros, total] = await Promise.all([
+        prisma.libro.findMany({
+            include: INCLUDE_PRESTAMOS_ACTIVOS,
+            skip,
+            take: limite // "take" es el equivalente de Prisma a LIMIT en SQL
+        }),
+        prisma.libro.count()
+    ]);
+
+    return { libros, total };
 };
 
 //definir LibroData para tipar los datos que se reciben al agregar un libro

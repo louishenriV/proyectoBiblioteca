@@ -10,20 +10,42 @@ const app = Router()
  * @openapi
  * /libros:
  *   get:
- *     summary: Obtener todos los libros del acervo
+ *     summary: Obtener los libros del acervo, paginados
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - name: pagina
+ *         in: query
+ *         description: Numero de pagina (empieza en 1)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - name: limite
+ *         in: query
+ *         description: Cuantos libros traer por pagina (maximo 100)
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 20
  *     responses:
  *       200:
- *         description: Lista de libros
+ *         description: Pagina de libros, con metadatos de paginacion
  */
 
 //obtener todos los libros, ruta /libros 
-app.get("/", async(req,res) => { //Endpoint tipico de API
-    res.json(await obtenerLibros())
+app.get("/", async(req,res) => {
+    const pagina = Math.max(1, parseInt(req.query.pagina as string) || 1);
+    const limite = Math.min(100, Math.max(1, parseInt(req.query.limite as string) || 20));
+
+    const { libros, total } = await obtenerLibros(pagina, limite);
+    const totalPaginas = Math.ceil(total / limite);
+
+    res.json({
+        libros,
+        paginacion: { pagina, limite, total, totalPaginas }
+    });
 })
-/*Recuerda que ya estamos agregando libros desde el app.use... aqui ya no es 
-necesario volverlo a poner en la ruta porque si no sería como pedir la ruta libros/libros */
 
 
 /**
