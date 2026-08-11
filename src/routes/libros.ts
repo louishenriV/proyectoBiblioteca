@@ -3,6 +3,7 @@ import { obtenerLibros, agregarLibro, eliminarLibro, verLibro, actualizarLibro, 
 import { checarDisponibilidad } from "../services/prestamoService.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
 import { validarDatosLibro } from "../validators/libroValidator.js";
+import { parsePaginacion } from "../utils/paginacion.js";
 
 const app = Router()
 
@@ -34,13 +35,12 @@ const app = Router()
  */
 
 //obtener todos los libros, ruta /libros 
-app.get("/", async(req,res) => {
-    const pagina = Math.max(1, parseInt(req.query.pagina as string) || 1);
-    const limite = Math.min(100, Math.max(1, parseInt(req.query.limite as string) || 20));
-
+app.get("/", async(req,res) => { //Endpoint tipico de API
+    const { pagina, limite } = parsePaginacion(req.query);
+ 
     const { libros, total } = await obtenerLibros(pagina, limite);
     const totalPaginas = Math.ceil(total / limite);
-
+ 
     res.json({
         libros,
         paginacion: { pagina, limite, total, totalPaginas }
@@ -119,8 +119,16 @@ app.get("/buscar", async (req, res) => {
         res.status(400).json({ mensaje: "Debes proporcionar un término de búsqueda" });
         return;
     }
-    const resultados = await buscarLibros(q);
-    res.json(resultados);
+ 
+    const { pagina, limite } = parsePaginacion(req.query);
+ 
+    const { libros, total } = await buscarLibros(q, pagina, limite);
+    const totalPaginas = Math.ceil(total / limite);
+ 
+    res.json({
+        libros,
+        paginacion: { pagina, limite, total, totalPaginas }
+    });
 });
 
 /**

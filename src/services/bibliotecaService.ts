@@ -122,15 +122,24 @@ export const actualizarLibro = async (id:string, data: actualizarLibroData) => {
 };
 
 
-export const buscarLibros = async (query: string) => {
-    return await prisma.libro.findMany({
-        where: {
-            OR: [
-                { titulo: { contains: query, mode: "insensitive" } }, //verifica si la consulta está contenida en el título, autor o año de publicación, sin importar mayúsculas o minúsculas
-                { autor: { contains: query, mode: "insensitive" } }
-            ]
-        },
-            include: INCLUDE_PRESTAMOS_ACTIVOS
-    });
-}
-                
+export const buscarLibros = async (query: string, pagina: number, limite: number) => {
+    const skip = (pagina - 1) * limite;
+    const filtro = {
+        OR: [
+            { titulo: { contains: query, mode: "insensitive" as const } }, //verifica si la consulta está contenida en el título, autor o año de publicación, sin importar mayúsculas o minúsculas
+            { autor: { contains: query, mode: "insensitive" as const } }
+        ]
+    };
+ 
+    const [libros, total] = await Promise.all([
+        prisma.libro.findMany({
+            where: filtro,
+            include: INCLUDE_PRESTAMOS_ACTIVOS,
+            skip,
+            take: limite
+        }),
+        prisma.libro.count({ where: filtro })
+    ]);
+ 
+    return { libros, total };
+}            
