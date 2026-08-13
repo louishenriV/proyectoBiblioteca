@@ -4,6 +4,7 @@ import { AppError } from "../errors/AppError.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+
 type UsuarioData = {
     nombre: string;
     email: string;
@@ -67,6 +68,65 @@ export const eliminarUsuario = async (email:string) => {
     return { mensaje: "Usuario eliminado" };
 };
 
+
+//listar todos los usuarios (solo para el panel de administracion)
+export const listarUsuarios = async () => {
+    return await prisma.usuario.findMany({
+        select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true
+            // password nunca se incluye aqui, por seguridad
+        }
+    });
+};
+ 
+type ActualizarUsuarioAdminData = {
+    nombre?: string;
+    email?: string;
+    rol?: string;
+};
+ 
+//actualizar nombre, email y/o rol de OTRO usuario (solo admin).
+//Separada de actualizarDatos a proposito: esta si puede tocar el rol,
+//la de auto-edicion nunca deberia poder hacerlo.
+export const actualizarUsuarioComoAdmin = async (id: string, data: ActualizarUsuarioAdminData) => {
+    const dataActualizada: Partial<{ nombre: string; email: string; rol: "admin" | "user" }> = {};
+ 
+    if (data.nombre) dataActualizada.nombre = data.nombre;
+    if (data.email) dataActualizada.email = data.email;
+    if (data.rol !== undefined) {
+        if (data.rol !== "admin" && data.rol !== "user") {
+            throw new AppError("El rol debe ser 'admin' o 'user'", 400);
+        }
+        dataActualizada.rol = data.rol;
+    }
+ 
+    try {
+        const usuarioActualizado = await prisma.usuario.update({
+            where: { id },
+            data: dataActualizada,
+            select: {
+                id: true,
+                nombre: true,
+                email: true,
+                rol: true
+            }
+        });
+        return usuarioActualizado;
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2002") {
+                throw new AppError("El email ya está registrado", 409);
+            }
+            if (error.code === "P2025") {
+                throw new AppError("Usuario no encontrado", 404);
+            }
+        }
+        throw error;
+    }
+};
 
 
 //actualizar datos
