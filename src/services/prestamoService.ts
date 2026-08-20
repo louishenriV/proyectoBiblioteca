@@ -63,14 +63,27 @@ export const obtenerPrestamosActivos = async (usuarioId: string) => { //filtrar 
     });
 };
 
-export const obtenerHistorialPrestamos = async (usuarioId: string) => {
-    return await prisma.prestamo.findMany({
-        where: { usuarioId },
-        include: {
-            usuario: { select: { id: true, nombre: true, email: true } },
-            libro: true
-        }
-    });
+export const obtenerHistorialPrestamos = async (usuarioId: string, pagina: number, limite: number) => { //página indica en qué página estamos, y limite indica cuántos prestamos queremos por página
+    const skip = (pagina - 1) * limite; //cuántos registros altar para llegar  la o página que queremos. 
+    //por ejemplo, si estamos en la página 2 y el límite es 10, entonces skip = (2-1)*10 = 10, es decir, saltamos los primeros 10 registros para llegar a la página 2.
+    const filtro = { usuarioId };
+    //se va a utilizar dos vees esta variable, una para obtener los prestamos y otra para obtener el total de prestamos, por eso se hace en paralelo con Promise.all
+
+    const [prestamos, total] = await Promise.all([ //promise.all le pide dos cosas a la vez a la base de datos, y espera a que ambas terminen para devolver un array con los resultados. 
+        prisma.prestamo.findMany({
+            where: filtro,
+            include: {
+                usuario: { select: { id: true, nombre: true, email: true } },
+                libro: true
+            },
+            orderBy: { fechaPrestamo: "desc" }, // el prestamo mas reciente primero, tiene mas sentido para un historial
+            skip,
+            take: limite
+        }),
+        prisma.prestamo.count({ where: filtro })
+    ]);
+
+    return { prestamos, total };
 };
 
 export const checarDisponibilidad = async (libroId: string) => {

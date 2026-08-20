@@ -11,17 +11,27 @@ type prestamoHistorial = { //Define la forma de cada préstamo que viene de la A
     };
 }
 
+type Paginacion = {
+    pagina: number;
+    limite: number;
+    total: number;
+    totalPaginas: number;
+}
+
 function HistorialPrestamos() {
     const [historial, setHistorial] = useState<prestamoHistorial[]>([]); //Array vacío que se llenará con los préstamos del historial del usuario.
-    
+    const [pagina, setPagina] = useState<number>(1); //en que pagina estamos parados ahorita
+    const [paginacion, setPaginacion] = useState<Paginacion | null>(null); //metadata que manda el backend
+
     useEffect(() => {
-    authFetch("/prestamos/historial")
-    .then(res => res.json())
-    .then(data => {
-        setHistorial(data.prestamos);
-    })
-    .catch(err => console.error("Error:", err));
-}, []);
+        authFetch(`/prestamos/historial?pagina=${pagina}`) //"...especificamente esta página"
+        .then(res => res.json())
+        .then(data => {
+            setHistorial(data.prestamos);
+            setPaginacion(data.paginacion);
+        })
+        .catch(err => console.error("Error:", err));
+    }, [pagina]); // se vuelve a pedir cada vez que cambia la pagina
     
     return (
         <div>
@@ -44,6 +54,24 @@ function HistorialPrestamos() {
                     ))}
                 </tbody>
             </table>
+
+            {paginacion && (
+                <div>
+                    <button
+                        onClick={() => setPagina(p => p - 1)}
+                        disabled={pagina <= 1}
+                    >
+                        Anterior
+                    </button>
+                    <span> Página {paginacion.pagina} de {paginacion.totalPaginas || 1} ({paginacion.total} préstamos) </span>
+                    <button
+                        onClick={() => setPagina(p => p + 1)}
+                        disabled={pagina >= paginacion.totalPaginas}
+                    >
+                        Siguiente
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

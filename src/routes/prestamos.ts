@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { crearPrestamo, devolverLibro, obtenerPrestamosActivos, obtenerHistorialPrestamos} from "../services/prestamoService.js";
+import { parsePaginacion } from "../utils/paginacion.js";
 
 const app = Router();
 
@@ -95,9 +96,15 @@ app.get("/activos", async (req, res) => {
 
 app.get("/historial", async (req, res) => {
     const { id: usuarioId } = req.usuario!; // Obtenemos el ID del usuario autenticado desde el middleware de autenticación
-
-    const historialPrestamos = await obtenerHistorialPrestamos(usuarioId);
-    res.json({ prestamos: historialPrestamos });
+    const { pagina, limite } = parsePaginacion(req.query); //lee paggina y limite de la URL. Si vienen inválidos o ausentes, parsePaginacion les asigna valores por default (pagina=1, limite=20)
+ 
+    const { prestamos, total } = await obtenerHistorialPrestamos(usuarioId, pagina, limite);
+    const totalPaginas = Math.ceil(total / limite);
+ 
+    res.json({
+        prestamos,
+        paginacion: { pagina, limite, total, totalPaginas }
+    });
 });
 
 export default app;
