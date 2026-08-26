@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { authFetch } from "../api";
+import { Link } from "react-router-dom";
 
 type TokenPayload = {
     id: string;
@@ -89,6 +90,21 @@ function Acervo() {
         }
     };
 
+    const handleEliminar = async (libroId: string) => {
+        if (!window.confirm("¿Estás seguro de que quieres eliminar este libro?")) return;
+
+        const response = await authFetch(`/libros/${libroId}`, {
+            method: "DELETE"
+        });
+        
+        if (response.ok) {
+            setLibros(libros.filter(libro => libro.id !== libroId));
+        } else {
+            const data = await response.json();
+            setMensaje(data.mensaje || "No se pudo eliminar el libro");
+        }
+    };
+
     return (
         <div>
             <h1>Acervo</h1>
@@ -122,6 +138,12 @@ function Acervo() {
                         <td>{libro.prestamos.length === 0 && (
                             <button onClick={() => handlePrestamo(libro.id)}>Pedir prestado</button>
                          )}
+                         {rol === "admin" && (
+                            <>
+                            <button onClick={() => handleEliminar(libro.id)}>Eliminar</button>
+                            <Link to={`/editar-libro/${libro.id}`}>Editar</Link>
+                            </>
+                        )}
                         </td>
                     </tr>
                 ))}
