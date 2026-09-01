@@ -7,6 +7,7 @@ import Prestamos from "./components/Prestamos"
 import AgregarLibro from "./components/AgregarLibro"
 import {jwtDecode} from "jwt-decode"
 import HistorialPrestamos from "./components/HistorialPestamos"
+import EditarLibro from "./components/EditarLibro"
 
 type TokenPayload = {
     id: string;
@@ -34,6 +35,7 @@ function App() {
         <Route path="/prestamos" element={token ? <Prestamos /> : <Navigate to="/login" />} />
         <Route path="/agregar-libro" element={token && rol === "admin" ? <AgregarLibro /> : <Navigate to="/" />} />
         <Route path="/prestamos/historial" element={token ? <HistorialPrestamos /> : <Navigate to="/login" />} />
+        <Route path="/editar-libro/:id" element={token && rol === "admin" ? <EditarLibro /> : <Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   )
