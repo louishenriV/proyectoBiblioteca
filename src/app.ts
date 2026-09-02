@@ -63,9 +63,4 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({ mensaje: "Error interno del servidor" });
 });
 
-const PORT = process.env.PORT || 3000; //definimos el puerto, si no esta definido en el .env, se usara el 3000
-    app.listen(PORT, () =>{
-    console.log("Server listening on localhost:3000")
-})
-
-PORT; 
+export default app; //exportamos la app para poder usarla en otros archivos
