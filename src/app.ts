@@ -19,7 +19,14 @@ const app = express(); //creamos la app donde va a estar nuestro server
 const allowedOrigins: (string | RegExp)[] = [/\.vercel\.app$/];
 
 if (process.env.CORS_ORIGIN_DEV) {
-    allowedOrigins.push(process.env.CORS_ORIGIN_DEV);
+    const origenesLocales = process.env.CORS_ORIGIN_DEV
+        .split(",")
+        .map((origen) => origen.trim())
+        .filter(Boolean);
+    allowedOrigins.push(...origenesLocales);
+    // Vite usa otro puerto si 5173 está ocupado, y localhost vs 127.0.0.1
+    // son orígenes distintos; ambos deben poder hablar con la API en local.
+    allowedOrigins.push(/^http:\/\/(localhost|127\.0\.0\.1):\d+$/);
 }
 
 app.use(cors({
