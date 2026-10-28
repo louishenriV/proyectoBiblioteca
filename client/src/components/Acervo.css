@@ -1,0 +1,272 @@
+.acervo {
+  width: 100%;
+  text-align: left;
+  padding: 24px 28px 40px;
+  box-sizing: border-box;
+}
+
+.acervo-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.acervo-top h1 {
+  margin: 0;
+  font-size: 36px;
+  letter-spacing: -0.8px;
+}
+
+.acervo-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.acervo-nav a,
+.acervo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--social-bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, color 0.2s;
+}
+
+.acervo-nav a:hover,
+.acervo-btn:hover:not(:disabled) {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+}
+
+.acervo-btn:focus-visible,
+.acervo-nav a:focus-visible,
+.acervo-search:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.acervo-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.acervo-btn-primary {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 88%, white), var(--accent));
+  border-color: transparent;
+  color: #fff;
+}
+
+.acervo-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.acervo-btn-ghost {
+  background: transparent;
+}
+
+.acervo-btn-danger {
+  background: transparent;
+  color: var(--text-h);
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
+}
+
+.acervo-btn-danger:hover:not(:disabled) {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.acervo-alert {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--text-h);
+}
+
+.acervo-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.acervo-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background:
+    linear-gradient(125deg, var(--accent-bg) 0%, transparent 42%),
+    var(--social-bg);
+}
+
+.acervo-search {
+  flex: 1 1 240px;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 15px;
+}
+
+.acervo-search::placeholder {
+  color: var(--text);
+}
+
+.acervo-meta {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.acervo-table-wrap {
+  overflow: auto;
+  max-height: min(62vh, 720px);
+}
+
+.acervo-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 15px;
+}
+
+.acervo-table caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.acervo-table th,
+.acervo-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.acervo-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-h);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 16%, var(--bg)),
+    var(--code-bg)
+  );
+}
+
+.acervo-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--social-bg) 70%, transparent);
+}
+
+.acervo-table tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+.acervo-table td:first-child {
+  color: var(--text-h);
+  font-weight: 500;
+  max-width: 280px;
+  white-space: normal;
+}
+
+.acervo-isbn {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.acervo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.acervo-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.acervo-badge--ok {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+}
+
+.acervo-badge--off {
+  color: var(--text);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+}
+
+.acervo-empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--text);
+}
+
+.acervo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--social-bg);
+}
+
+.acervo-pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* TODO: revisar layout móvil (cards vs scroll horizontal). No rediseñar ahora. */
+@media (max-width: 720px) {
+  .acervo {
+    padding: 16px 12px 28px;
+  }
+
+  .acervo-top h1 {
+    font-size: 28px;
+  }
+}

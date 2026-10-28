@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { authFetch } from "../api";
 import { Link } from "react-router-dom";
+import "./Acervo.css";
 
 type TokenPayload = {
     id: string;
@@ -18,7 +19,7 @@ type Libro = {
     edicion?: string;
     isbn?: string;
     prestamos: { id: string }[];
-} //defines la forma que tienen los datos que vas a recibir de la API. 
+}
 
 type Paginacion = {
     pagina: number;
@@ -28,50 +29,48 @@ type Paginacion = {
 }
 
 function Acervo() {
-    const [libros, setLibros] = useState<Libro[]>([]); //creas un estado que empieza como un array vacío.
-    const [busqueda, setBusqueda] = useState<string>(""); //creas un estado para la búsqueda que empieza como un string vacío.
-    const [mensaje, setMensaje] = useState<string>(""); //estado para mostrar errores del backend al usuario (ej. libro ya prestado)
-    const [pagina, setPagina] = useState<number>(1); //en que pagina estamos parados ahorita
-    const [paginacion, setPaginacion] = useState<Paginacion | null>(null); //la metadata que manda el backend (total, totalPaginas, etc)
+    const [libros, setLibros] = useState<Libro[]>([]);
+    const [busqueda, setBusqueda] = useState<string>("");
+    const [mensaje, setMensaje] = useState<string>("");
+    const [pagina, setPagina] = useState<number>(1);
+    const [paginacion, setPaginacion] = useState<Paginacion | null>(null);
+    const [cargando, setCargando] = useState<boolean>(true);
 
-    useEffect(() => { //Se ejecuta cada vez que busqueda o pagina cambian, esto manda una petición al backend después de un pequeño retraso.
-    const delay = setTimeout(() => {
-        if (busqueda.trim() === "") {
-            // si está vacío, carga todos los libros de la pagina actual
-            authFetch(`/libros?pagina=${pagina}`)
-            .then(res => res.json())
-            .then(data => {
-                setLibros(data.libros);
-                setPaginacion(data.paginacion);
-            });
-        } else {
-            authFetch(`/libros/buscar?q=${busqueda}&pagina=${pagina}`)
-            .then(res => res.json())
-            .then(data => {
-                setLibros(data.libros);
-                setPaginacion(data.paginacion);
-            });
-        }
-    }, 400); // espera 400ms después de que el usuario deje de escribir
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setCargando(true);
+            const query = busqueda.trim() === ""
+                ? `/libros?pagina=${pagina}`
+                : `/libros/buscar?q=${encodeURIComponent(busqueda)}&pagina=${pagina}`;
 
-    return () => clearTimeout(delay); // cancela el timer si el usuario sigue escribiendo
-}, [busqueda, pagina]); // el efecto se ejecuta cada vez que busqueda o pagina cambian
+            authFetch(query)
+                .then(res => res.json())
+                .then(data => {
+                    setLibros(Array.isArray(data.libros) ? data.libros : []);
+                    setPaginacion(data.paginacion ?? null);
+                })
+                .catch(() => setMensaje("No se pudo cargar el acervo"))
+                .finally(() => setCargando(false));
+        }, 400);
+
+        return () => clearTimeout(delay);
+    }, [busqueda, pagina]);
 
     const handleBusquedaChange = (valor: string) => {
         setBusqueda(valor);
-        setPagina(1); // toda busqueda nueva regresa a la primera pagina, para no quedarte "perdido" en una pagina que ya no tiene sentido con el nuevo filtro
+        setPagina(1);
     };
 
     const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-    };  
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+    };
 
     const token = localStorage.getItem("token");
     const rol = token ? jwtDecode<TokenPayload>(token).rol : null;
-    
+
     const handlePrestamo = async (libroId: string) => {
-        setMensaje(""); //limpiamos cualquier mensaje de error anterior antes de intentar de nuevo
+        setMensaje("");
 
         const response = await authFetch(`/prestamos/`, {
             method: "POST",
@@ -82,7 +81,7 @@ function Acervo() {
         const data = await response.json();
 
         if (response.ok) {
-            setLibros(libros.map(libro => 
+            setLibros(libros.map(libro =>
                 libro.id === libroId ? { ...libro, prestamos: [{id: "temp"}] } : libro
             ));
         } else {
@@ -96,7 +95,7 @@ function Acervo() {
         const response = await authFetch(`/libros/${libroId}`, {
             method: "DELETE"
         });
-        
+
         if (response.ok) {
             setLibros(libros.filter(libro => libro.id !== libroId));
         } else {
@@ -105,74 +104,139 @@ function Acervo() {
         }
     };
 
+    const totalLibros = paginacion?.total ?? libros.length;
+    const totalPaginas = paginacion?.totalPaginas || 1;
+
     return (
-        <div>
-            <h1>Acervo</h1>
-            <input
-                type="text"
-                placeholder="Buscar por título o autor..."
-                value={busqueda}
-                onChange={(e) => handleBusquedaChange(e.target.value)}
-                />
-             {mensaje && <p style={{ color: "red" }}>{mensaje}</p>}
-             <table>
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Año</th>
-                    <th>Editorial</th>
-                    <th>Edición</th>
-                    <th>Disponibilidad</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                {libros.map(libro => (
-                    <tr key={libro.id}>
-                        <td>{libro.titulo}</td>
-                        <td>{libro.autor}</td>
-                        <td>{libro.anioPublicacion}</td>
-                        <td>{libro.editorial ?? "—"}</td>
-                        <td>{libro.edicion ?? "—"}</td>
-                        <td>{libro.prestamos.length === 0 && (
-                            <button onClick={() => handlePrestamo(libro.id)}>Pedir prestado</button>
-                         )}
-                         {rol === "admin" && (
-                            <>
-                            <button onClick={() => handleEliminar(libro.id)}>Eliminar</button>
-                            <Link to={`/editar-libro/${libro.id}`}>Editar</Link>
-                            </>
-                        )}
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+        <div className="acervo">
+            <header className="acervo-top">
+                <h1>Acervo</h1>
+                <nav className="acervo-nav" aria-label="Navegación del acervo">
+                    <Link to="/prestamos">Mis préstamos</Link>
+                    {rol === "admin" && <Link to="/agregar-libro">Agregar libro</Link>}
+                    <button type="button" className="acervo-btn acervo-btn-ghost" onClick={handleLogout}>
+                        Cerrar sesión
+                    </button>
+                </nav>
+            </header>
 
-        {paginacion && (
-            <div>
-                <button
-                    onClick={() => setPagina(p => p - 1)}
-                    disabled={pagina <= 1}
-                >
-                    Anterior
-                </button>
-                <span> Página {paginacion.pagina} de {paginacion.totalPaginas || 1} ({paginacion.total} libros) </span>
-                <button
-                    onClick={() => setPagina(p => p + 1)}
-                    disabled={pagina >= paginacion.totalPaginas}
-                >
-                    Siguiente
-                </button>
-            </div>
-        )}
+            {mensaje && <p className="acervo-alert" role="alert">{mensaje}</p>}
 
-        <a href="/prestamos">Mis préstamos</a>
-        <br />
-        {rol === "admin" && <a href="/agregar-libro">Agregar libro</a>}
-        <br />
-        <button onClick={handleLogout}>Cerrar sesión</button>
+            <section className="acervo-card">
+                <div className="acervo-toolbar">
+                    <input
+                        className="acervo-search"
+                        type="search"
+                        placeholder="Buscar por título o autor..."
+                        value={busqueda}
+                        onChange={(e) => handleBusquedaChange(e.target.value)}
+                        aria-label="Buscar libros por título o autor"
+                    />
+                    <span className="acervo-meta">
+                        {cargando ? "Cargando…" : `${totalLibros} ${totalLibros === 1 ? "libro" : "libros"}`}
+                    </span>
+                </div>
+
+                <div className="acervo-table-wrap">
+                    <table className="acervo-table">
+                        <caption>Catálogo de libros del acervo</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Título</th>
+                                <th scope="col">Autor</th>
+                                <th scope="col">Año</th>
+                                <th scope="col">Editorial</th>
+                                <th scope="col">Edición</th>
+                                <th scope="col">ISBN</th>
+                                <th scope="col">Disponibilidad</th>
+                                <th scope="col">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {!cargando && libros.length === 0 && (
+                                <tr>
+                                    <td colSpan={8} className="acervo-empty">
+                                        {busqueda.trim()
+                                            ? "No hay resultados para esa búsqueda."
+                                            : "Aún no hay libros en el acervo."}
+                                    </td>
+                                </tr>
+                            )}
+                            {libros.map(libro => {
+                                const disponible = libro.prestamos.length === 0;
+                                return (
+                                    <tr key={libro.id}>
+                                        <td>{libro.titulo}</td>
+                                        <td>{libro.autor}</td>
+                                        <td>{libro.anioPublicacion}</td>
+                                        <td>{libro.editorial ?? "—"}</td>
+                                        <td>{libro.edicion ?? "—"}</td>
+                                        <td className="acervo-isbn">{libro.isbn ?? "—"}</td>
+                                        <td>
+                                            <span className={`acervo-badge ${disponible ? "acervo-badge--ok" : "acervo-badge--off"}`}>
+                                                {disponible ? "Disponible" : "Prestado"}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div className="acervo-actions">
+                                                {disponible && (
+                                                    <button
+                                                        type="button"
+                                                        className="acervo-btn acervo-btn-primary"
+                                                        onClick={() => handlePrestamo(libro.id)}
+                                                    >
+                                                        Pedir prestado
+                                                    </button>
+                                                )}
+                                                {rol === "admin" && (
+                                                    <>
+                                                        <Link className="acervo-btn" to={`/editar-libro/${libro.id}`}>
+                                                            Editar
+                                                        </Link>
+                                                        <button
+                                                            type="button"
+                                                            className="acervo-btn acervo-btn-danger"
+                                                            onClick={() => handleEliminar(libro.id)}
+                                                        >
+                                                            Eliminar
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+
+                {paginacion && (
+                    <footer className="acervo-footer">
+                        <span className="acervo-meta">
+                            Página {paginacion.pagina} de {totalPaginas}
+                        </span>
+                        <div className="acervo-pager">
+                            <button
+                                type="button"
+                                className="acervo-btn"
+                                onClick={() => setPagina(p => p - 1)}
+                                disabled={pagina <= 1}
+                            >
+                                Anterior
+                            </button>
+                            <button
+                                type="button"
+                                className="acervo-btn"
+                                onClick={() => setPagina(p => p + 1)}
+                                disabled={pagina >= totalPaginas}
+                            >
+                                Siguiente
+                            </button>
+                        </div>
+                    </footer>
+                )}
+            </section>
         </div>
     );
 }
